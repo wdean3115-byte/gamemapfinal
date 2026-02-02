@@ -237,7 +237,6 @@ export const getPlayerSprite = (
   facingRight: boolean
 ): HTMLImageElement | null => {
   let playerImages: PlayerImages | null = null;
-
   switch (playerId) {
     case 1:
       playerImages = images.player1;
@@ -254,12 +253,9 @@ export const getPlayerSprite = (
     default:
       return null;
   }
-
   if (!playerImages) return null;
-
   if (animFrame === 0) {
     return playerImages.idle;
   }
-
   return facingRight ? playerImages.right : playerImages.left;
 };

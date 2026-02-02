@@ -57,7 +57,7 @@ interface PushBox {
 export const drawBackgroundWorld1 = (
   ctx: CanvasRenderingContext2D,
   width: number,
-  height: number
+  height: number,
 ) => {
   const gradient = ctx.createLinearGradient(0, 0, 0, height);
   gradient.addColorStop(0, "#87CEEB");
@@ -70,9 +70,12 @@ export const drawBackgroundWorld1 = (
 /**
  * Draw ground (World 1 - Green grass)
  */
-export const drawGroundWorld1 = (ctx: CanvasRenderingContext2D, groundY: number) => {
+export const drawGroundWorld1 = (
+  ctx: CanvasRenderingContext2D,
+  groundY: number,
+) => {
   ctx.fillStyle = "#90EE90";
-  ctx.fillRect(-100, groundY, 3500, 100);
+  ctx.fillRect(-100, groundY, 5000, 100);
 };
 
 // ============================================
@@ -86,7 +89,7 @@ export const drawBackgroundWorld2 = (
   ctx: CanvasRenderingContext2D,
   width: number,
   height: number,
-  animTimer: number
+  animTimer: number,
 ) => {
   // Sky gradient
   const gradient = ctx.createLinearGradient(0, 0, 0, height);
@@ -100,12 +103,18 @@ export const drawBackgroundWorld2 = (
   ctx.save();
   ctx.fillStyle = "#ffffff";
   const starPositions = [
-    { x: 100, y: 50, size: 2 }, { x: 250, y: 100, size: 1.5 },
-    { x: 400, y: 30, size: 2.5 }, { x: 600, y: 80, size: 1 },
-    { x: 800, y: 120, size: 2 }, { x: 950, y: 40, size: 1.5 },
-    { x: 1100, y: 90, size: 2 }, { x: 200, y: 150, size: 1 },
-    { x: 500, y: 140, size: 2.5 }, { x: 700, y: 60, size: 1.5 },
-    { x: 900, y: 110, size: 2 }, { x: 1050, y: 70, size: 1 },
+    { x: 100, y: 50, size: 2 },
+    { x: 250, y: 100, size: 1.5 },
+    { x: 400, y: 30, size: 2.5 },
+    { x: 600, y: 80, size: 1 },
+    { x: 800, y: 120, size: 2 },
+    { x: 950, y: 40, size: 1.5 },
+    { x: 1100, y: 90, size: 2 },
+    { x: 200, y: 150, size: 1 },
+    { x: 500, y: 140, size: 2.5 },
+    { x: 700, y: 60, size: 1.5 },
+    { x: 900, y: 110, size: 2 },
+    { x: 1050, y: 70, size: 1 },
   ];
 
   starPositions.forEach((star, index) => {
@@ -128,7 +137,14 @@ export const drawBackgroundWorld2 = (
   const moonY = 80;
   const moonRadius = 40;
 
-  const moonGlow = ctx.createRadialGradient(moonX, moonY, moonRadius * 0.5, moonX, moonY, moonRadius * 2);
+  const moonGlow = ctx.createRadialGradient(
+    moonX,
+    moonY,
+    moonRadius * 0.5,
+    moonX,
+    moonY,
+    moonRadius * 2,
+  );
   moonGlow.addColorStop(0, "rgba(255, 255, 200, 0.3)");
   moonGlow.addColorStop(1, "rgba(255, 255, 200, 0)");
   ctx.fillStyle = moonGlow;
@@ -154,7 +170,10 @@ export const drawBackgroundWorld2 = (
 /**
  * Draw ground (World 2 - Dark ground)
  */
-export const drawGroundWorld2 = (ctx: CanvasRenderingContext2D, height: number) => {
+export const drawGroundWorld2 = (
+  ctx: CanvasRenderingContext2D,
+  height: number,
+) => {
   ctx.fillStyle = "#1a1a2e";
   ctx.fillRect(-100, height - 60, 5000, 100);
 };
@@ -164,7 +183,7 @@ export const drawGroundWorld2 = (ctx: CanvasRenderingContext2D, height: number) 
  */
 export const drawPlatforms = (
   ctx: CanvasRenderingContext2D,
-  platforms: Platform[]
+  platforms: Platform[],
 ) => {
   platforms.forEach((platform) => {
     ctx.fillStyle = "#5D6D7E";
@@ -174,7 +193,11 @@ export const drawPlatforms = (
     ctx.fillRect(platform.x, platform.y, platform.width, 4);
 
     ctx.fillStyle = "#2C3E50";
-    for (let i = platform.x + 10; i < platform.x + platform.width - 10; i += 20) {
+    for (
+      let i = platform.x + 10;
+      i < platform.x + platform.width - 10;
+      i += 20
+    ) {
       ctx.beginPath();
       ctx.arc(i, platform.y + 10, 3, 0, Math.PI * 2);
       ctx.fill();
@@ -189,15 +212,27 @@ export const drawDangerButtons = (
   ctx: CanvasRenderingContext2D,
   buttons: DangerButton[],
   animTimer: number,
-  dangerButtonImage: HTMLImageElement | null
+  dangerButtonImage: HTMLImageElement | null,
 ) => {
   buttons.forEach((button) => {
     if (dangerButtonImage && dangerButtonImage.complete) {
-      ctx.drawImage(dangerButtonImage, button.x, button.y, button.width, button.height);
+      ctx.drawImage(
+        dangerButtonImage,
+        button.x,
+        button.y,
+        button.width,
+        button.height,
+      );
     } else {
       ctx.fillStyle = "#E74C3C";
       ctx.beginPath();
-      ctx.arc(button.x + button.width / 2, button.y + button.height / 2, button.width / 2, 0, Math.PI * 2);
+      ctx.arc(
+        button.x + button.width / 2,
+        button.y + button.height / 2,
+        button.width / 2,
+        0,
+        Math.PI * 2,
+      );
       ctx.fill();
     }
 
@@ -206,7 +241,13 @@ export const drawDangerButtons = (
     ctx.globalAlpha = pulse * 0.3;
     ctx.fillStyle = "#E74C3C";
     ctx.beginPath();
-    ctx.arc(button.x + button.width / 2, button.y + button.height / 2, button.width / 2 + 10, 0, Math.PI * 2);
+    ctx.arc(
+      button.x + button.width / 2,
+      button.y + button.height / 2,
+      button.width / 2 + 10,
+      0,
+      Math.PI * 2,
+    );
     ctx.fill();
     ctx.restore();
   });
@@ -224,7 +265,7 @@ export const drawBackgroundWorld3 = (
   width: number,
   height: number,
   animTimer: number,
-  cameraX: number = 0
+  cameraX: number = 0,
 ) => {
   // Sky gradient
   const gradient = ctx.createLinearGradient(0, 0, 0, height);
@@ -252,7 +293,7 @@ export const drawBackgroundWorld3 = (
     { x: 1050, y: 110, size: 1.8 },
     { x: 350, y: 70, size: 2.2 },
   ];
-  
+
   starPositions.forEach((star, index) => {
     const twinkle = Math.sin(animTimer * 0.05 + index) * 0.5 + 0.5;
     ctx.globalAlpha = twinkle * 0.8 + 0.2;
@@ -267,15 +308,22 @@ export const drawBackgroundWorld3 = (
   const moonX = width - 120;
   const moonY = 70;
   const moonRadius = 35;
-  
-  const moonGlow = ctx.createRadialGradient(moonX, moonY, moonRadius * 0.5, moonX, moonY, moonRadius * 2);
+
+  const moonGlow = ctx.createRadialGradient(
+    moonX,
+    moonY,
+    moonRadius * 0.5,
+    moonX,
+    moonY,
+    moonRadius * 2,
+  );
   moonGlow.addColorStop(0, "rgba(255, 255, 220, 0.3)");
   moonGlow.addColorStop(1, "rgba(255, 255, 220, 0)");
   ctx.fillStyle = moonGlow;
   ctx.beginPath();
   ctx.arc(moonX, moonY, moonRadius * 2, 0, Math.PI * 2);
   ctx.fill();
-  
+
   ctx.fillStyle = "#f5f5dc";
   ctx.beginPath();
   ctx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
@@ -287,17 +335,41 @@ export const drawBackgroundWorld3 = (
   ctx.save();
   ctx.translate(-cameraX * 0.3, 0);
   for (let i = 0; i < cloudCount; i++) {
-    const cloudX = (i * 500) + ((animTimer * 0.3 + i * 100) % 7000);
+    const cloudX = i * 500 + ((animTimer * 0.3 + i * 100) % 7000);
     const cloudY = 50 + (i % 3) * 30;
     const cloudWidth = 100 + (i % 4) * 30;
-    
+
     ctx.fillStyle = "rgba(40, 50, 80, 0.4)";
     ctx.beginPath();
     ctx.arc(cloudX, cloudY, cloudWidth * 0.25, 0, Math.PI * 2);
-    ctx.arc(cloudX + cloudWidth * 0.2, cloudY - 10, cloudWidth * 0.2, 0, Math.PI * 2);
-    ctx.arc(cloudX + cloudWidth * 0.4, cloudY, cloudWidth * 0.3, 0, Math.PI * 2);
-    ctx.arc(cloudX + cloudWidth * 0.6, cloudY - 5, cloudWidth * 0.2, 0, Math.PI * 2);
-    ctx.arc(cloudX + cloudWidth * 0.75, cloudY + 5, cloudWidth * 0.2, 0, Math.PI * 2);
+    ctx.arc(
+      cloudX + cloudWidth * 0.2,
+      cloudY - 10,
+      cloudWidth * 0.2,
+      0,
+      Math.PI * 2,
+    );
+    ctx.arc(
+      cloudX + cloudWidth * 0.4,
+      cloudY,
+      cloudWidth * 0.3,
+      0,
+      Math.PI * 2,
+    );
+    ctx.arc(
+      cloudX + cloudWidth * 0.6,
+      cloudY - 5,
+      cloudWidth * 0.2,
+      0,
+      Math.PI * 2,
+    );
+    ctx.arc(
+      cloudX + cloudWidth * 0.75,
+      cloudY + 5,
+      cloudWidth * 0.2,
+      0,
+      Math.PI * 2,
+    );
     ctx.fill();
   }
   ctx.restore();
@@ -306,7 +378,10 @@ export const drawBackgroundWorld3 = (
 /**
  * Draw ground (World 3 - Dark ground)
  */
-export const drawGroundWorld3 = (ctx: CanvasRenderingContext2D, height: number) => {
+export const drawGroundWorld3 = (
+  ctx: CanvasRenderingContext2D,
+  height: number,
+) => {
   ctx.fillStyle = "#1a1a2e";
   ctx.fillRect(-100, height - 60, 7000, 100);
 };
@@ -317,22 +392,27 @@ export const drawGroundWorld3 = (ctx: CanvasRenderingContext2D, height: number) 
 export const drawBoxes = (
   ctx: CanvasRenderingContext2D,
   boxes: PushBox[],
-  boxImage: HTMLImageElement | null
+  boxImage: HTMLImageElement | null,
 ) => {
   boxes.forEach((box) => {
     if (boxImage && boxImage.complete) {
       ctx.drawImage(boxImage, box.x, box.y, box.width, box.height);
     } else {
-      const boxGrad = ctx.createLinearGradient(box.x, box.y, box.x, box.y + box.height);
+      const boxGrad = ctx.createLinearGradient(
+        box.x,
+        box.y,
+        box.x,
+        box.y + box.height,
+      );
       boxGrad.addColorStop(0, "#A0826D");
       boxGrad.addColorStop(1, "#7A5C45");
       ctx.fillStyle = boxGrad;
       ctx.fillRect(box.x, box.y, box.width, box.height);
-      
+
       ctx.strokeStyle = "#5D4037";
       ctx.lineWidth = 2;
       ctx.strokeRect(box.x, box.y, box.width, box.height);
-      
+
       ctx.strokeStyle = "#6D4C41";
       ctx.beginPath();
       ctx.moveTo(box.x, box.y);
@@ -354,24 +434,24 @@ export const drawUIWorld3 = (
   isConnected: boolean,
   canvasHeight: number,
   playersAtDoor: number,
-  boxCount: number
+  boxCount: number,
 ) => {
   // UI Panel
   ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
   ctx.fillRect(12, 12, 300, 95);
   ctx.strokeStyle = "rgba(255,255,255,0.2)";
   ctx.strokeRect(12, 12, 300, 95);
-  
+
   ctx.fillStyle = "#fff";
   ctx.font = "bold 18px Arial";
   ctx.textAlign = "left";
   ctx.fillText("WORLD 3: TEAMWORK", 22, 35);
-  
+
   ctx.font = "16px Arial";
   ctx.fillText(`🔑 Key: ${keyCollected ? "✅" : "🔒"}`, 22, 58);
   ctx.fillText(`🚪 At Door: ${playersAtDoor}/${playerCount}`, 140, 58);
   ctx.fillText(`📦 Boxes: ${boxCount}`, 240, 58);
-  
+
   ctx.fillStyle = "#FCD34D";
   ctx.font = "12px Arial";
   ctx.fillText("Push boxes & stack players to reach the key!", 22, 80);
@@ -389,7 +469,7 @@ export const drawUIWorld3 = (
   ctx.fillRect(12, canvasHeight - 70, 520, 58);
   ctx.strokeStyle = "rgba(255,255,255,0.2)";
   ctx.strokeRect(12, canvasHeight - 70, 520, 58);
-  
+
   ctx.font = "bold 11px Arial";
   const controls = [
     { label: "P1", keys: "WASD", color: "#4A90D9" },
@@ -397,7 +477,7 @@ export const drawUIWorld3 = (
     { label: "P3", keys: "I J K L", color: "#4AD94A" },
     { label: "P4", keys: "8 4 5 6", color: "#D9D94A" },
   ];
-  
+
   controls.forEach((ctrl, i) => {
     const x = 22 + i * 125;
     ctx.fillStyle = ctrl.color;
@@ -407,10 +487,14 @@ export const drawUIWorld3 = (
     ctx.fillText(ctrl.keys, x + 25, canvasHeight - 50);
     ctx.font = "bold 11px Arial";
   });
-  
+
   ctx.fillStyle = "#9CA3AF";
   ctx.font = "10px Arial";
-  ctx.fillText("Tip: Push boxes to create stairs! Stand on boxes & teammates!", 22, canvasHeight - 25);
+  ctx.fillText(
+    "Tip: Push boxes to create stairs! Stand on boxes & teammates!",
+    22,
+    canvasHeight - 25,
+  );
 };
 
 // ============================================
@@ -424,7 +508,7 @@ export const drawDoor = (
   ctx: CanvasRenderingContext2D,
   door: Door,
   doorImage: HTMLImageElement | null,
-  keyCollected: boolean
+  keyCollected: boolean,
 ) => {
   if (doorImage?.complete) {
     ctx.drawImage(doorImage, door.x, door.y, door.width, door.height);
@@ -442,7 +526,7 @@ export const drawKey = (
   ctx: CanvasRenderingContext2D,
   key: KeyItem,
   keyImage: HTMLImageElement | null,
-  animTimer: number
+  animTimer: number,
 ) => {
   if (!key.collected && keyImage?.complete) {
     const bobOffset = Math.sin(animTimer * 0.1) * 5;
@@ -453,7 +537,13 @@ export const drawKey = (
     ctx.globalAlpha = 0.3;
     ctx.fillStyle = "#F1C40F";
     ctx.beginPath();
-    ctx.arc(key.x + key.width / 2, key.y + key.height / 2 + bobOffset, 30, 0, Math.PI * 2);
+    ctx.arc(
+      key.x + key.width / 2,
+      key.y + key.height / 2 + bobOffset,
+      30,
+      0,
+      Math.PI * 2,
+    );
     ctx.fill();
     ctx.restore();
   }
@@ -466,7 +556,7 @@ export const drawPlayer = (
   ctx: CanvasRenderingContext2D,
   player: Player,
   playerImage: HTMLImageElement | null,
-  isMyPlayer: boolean = false
+  isMyPlayer: boolean = false,
 ) => {
   if (player.dead) return;
 
@@ -509,7 +599,7 @@ export const drawUIWorld1 = (
   ctx: CanvasRenderingContext2D,
   hasKey: boolean,
   playersAtDoor: number,
-  connectedPlayers: number
+  connectedPlayers: number,
 ) => {
   ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
   ctx.fillRect(15, 15, 250, 110);
@@ -529,7 +619,7 @@ export const drawUIWorld2 = (
   playerCount: number,
   keyCollected: boolean,
   isConnected: boolean,
-  canvasHeight: number
+  canvasHeight: number,
 ) => {
   // Info panel
   ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
@@ -563,7 +653,7 @@ export const drawWaitingScreen = (
   ctx: CanvasRenderingContext2D,
   width: number,
   height: number,
-  playerCount: number
+  playerCount: number,
 ) => {
   ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
   ctx.fillRect(0, 0, width, height);
@@ -573,7 +663,11 @@ export const drawWaitingScreen = (
   ctx.textAlign = "center";
   ctx.fillText("Waiting for players...", width / 2, height / 2);
   ctx.font = "20px Arial";
-  ctx.fillText(`${playerCount} player(s) connected`, width / 2, height / 2 + 40);
+  ctx.fillText(
+    `${playerCount} player(s) connected`,
+    width / 2,
+    height / 2 + 40,
+  );
 };
 
 /**
@@ -582,7 +676,7 @@ export const drawWaitingScreen = (
 export const drawWinScreen = (
   ctx: CanvasRenderingContext2D,
   width: number,
-  height: number
+  height: number,
 ) => {
   ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
   ctx.fillRect(0, 0, width, height);
@@ -603,7 +697,7 @@ export const drawDeathScreen = (
   ctx: CanvasRenderingContext2D,
   width: number,
   height: number,
-  deathImage: HTMLImageElement | null
+  deathImage: HTMLImageElement | null,
 ) => {
   ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
   ctx.fillRect(0, 0, width, height);
@@ -615,7 +709,7 @@ export const drawDeathScreen = (
       width / 2 - imgSize / 2,
       height / 2 - imgSize / 2 - 30,
       imgSize,
-      imgSize
+      imgSize,
     );
   }
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+
 import player1IdleImg from "@/assets/player1-idle.png";
 import player1RightImg from "@/assets/player1-right.png";
 import player1LeftImg from "@/assets/player1-left.png";
@@ -96,21 +96,22 @@ const BOX_FRICTION = 0.85;
 const PLAYER_SEPARATION = 0.3; // БАГАСГАСАН: 0.5 -> 0.3
 
 const World3 = () => {
-  const navigate = useNavigate();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [gameState, setGameState] = useState<"playing" | "won" | "dead">("playing");
+  const [gameState, setGameState] = useState<"playing" | "won" | "dead">(
+    "playing",
+  );
   const [hasKey, setHasKey] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width: 1200, height: 700 });
   const [playersAtDoor, setPlayersAtDoor] = useState<Set<number>>(new Set());
   const [imagesLoaded, setImagesLoaded] = useState(false);
-  
+
   const keysPressed = useRef<Set<string>>(new Set());
   const animTimer = useRef(0);
   const deathTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  
+
   // Player images refs
-  const playerImages = useRef<{[key: string]: HTMLImageElement | null}>({});
+  const playerImages = useRef<{ [key: string]: HTMLImageElement | null }>({});
   const keyImage = useRef<HTMLImageElement | null>(null);
   const doorImage = useRef<HTMLImageElement | null>(null);
   const deathImage = useRef<HTMLImageElement | null>(null);
@@ -119,7 +120,12 @@ const World3 = () => {
 
   const groundY = canvasSize.height - 80;
 
-  const createPlayer = (id: number, x: number, color: string, controls: { left: string; right: string; jump: string }): Player => ({
+  const createPlayer = (
+    id: number,
+    x: number,
+    color: string,
+    controls: { left: string; right: string; jump: string },
+  ): Player => ({
     id,
     x,
     y: 400,
@@ -149,7 +155,11 @@ const World3 = () => {
 
   const playersRef = useRef<Player[]>([
     createPlayer(1, 50, "#4A90D9", { left: "a", right: "d", jump: "w" }),
-    createPlayer(2, 100, "#D94A4A", { left: "arrowleft", right: "arrowright", jump: "arrowup" }),
+    createPlayer(2, 100, "#D94A4A", {
+      left: "arrowleft",
+      right: "arrowright",
+      jump: "arrowup",
+    }),
     createPlayer(3, 150, "#4AD94A", { left: "j", right: "l", jump: "i" }),
     createPlayer(4, 200, "#D9D94A", { left: "4", right: "6", jump: "8" }),
   ]);
@@ -169,11 +179,13 @@ const World3 = () => {
     createBox(11, 5250, groundY - BOX_SIZE),
   ]);
 
-  const initialBoxPositions = useRef<{id: number, x: number, y: number}[]>([]);
+  const initialBoxPositions = useRef<{ id: number; x: number; y: number }[]>(
+    [],
+  );
 
   useEffect(() => {
     // Store initial box positions for reset
-    initialBoxPositions.current = boxesRef.current.map(box => ({
+    initialBoxPositions.current = boxesRef.current.map((box) => ({
       id: box.id,
       x: box.x,
       y: box.y,
@@ -186,7 +198,7 @@ const World3 = () => {
       const height = window.innerHeight;
       setCanvasSize({ width, height });
     };
-    
+
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -214,7 +226,10 @@ const World3 = () => {
       playerImages.current[key] = img;
     };
 
-    const loadSingleImage = (ref: React.MutableRefObject<HTMLImageElement | null>, src: string) => {
+    const loadSingleImage = (
+      ref: React.MutableRefObject<HTMLImageElement | null>,
+      src: string,
+    ) => {
       ref.current = new Image();
       ref.current.onload = checkAllLoaded;
       ref.current.onerror = () => {
@@ -322,7 +337,7 @@ const World3 = () => {
 
   const checkCollision = (
     rect1: { x: number; y: number; width: number; height: number },
-    rect2: { x: number; y: number; width: number; height: number }
+    rect2: { x: number; y: number; width: number; height: number },
   ) => {
     return (
       rect1.x < rect2.x + rect2.width &&
@@ -332,48 +347,61 @@ const World3 = () => {
     );
   };
 
-  const checkPlayerStacking = (player: Player, otherPlayer: Player): boolean => {
+  const checkPlayerStacking = (
+    player: Player,
+    otherPlayer: Player,
+  ): boolean => {
     if (player.dead || otherPlayer.dead) return false;
-    
+
     const feetY = player.y + player.height;
     const headY = otherPlayer.y;
     
-    const verticalCheck = feetY >= headY - 5 && feetY <= headY + 15 && player.vy >= 0;
-    
-    const horizontalOverlap = 
+    const verticalCheck =
+      feetY >= headY - 5 && feetY <= headY + 15 && player.vy >= 0;
+
+    const horizontalOverlap =
       player.x + player.width > otherPlayer.x + 8 &&
       player.x < otherPlayer.x + otherPlayer.width - 8;
-    
+
     return verticalCheck && horizontalOverlap;
   };
 
-  const checkStandingOnBox = (entity: { x: number; y: number; width: number; height: number; vy: number }, box: PushBox): boolean => {
+  const checkStandingOnBox = (
+    entity: { x: number; y: number; width: number; height: number; vy: number },
+    box: PushBox,
+  ): boolean => {
     const feetY = entity.y + entity.height;
     const boxTop = box.y;
-    
-    const verticalCheck = feetY >= boxTop - 5 && feetY <= boxTop + 10 && entity.vy >= 0;
-    
-    const horizontalOverlap = 
-      entity.x + entity.width > box.x + 5 &&
-      entity.x < box.x + box.width - 5;
-    
+
+    const verticalCheck =
+      feetY >= boxTop - 5 && feetY <= boxTop + 10 && entity.vy >= 0;
+
+    const horizontalOverlap =
+      entity.x + entity.width > box.x + 5 && entity.x < box.x + box.width - 5;
+
     return verticalCheck && horizontalOverlap;
   };
 
   const resetGame = useCallback(() => {
     playersRef.current = [
       createPlayer(1, 50, "#4A90D9", { left: "a", right: "d", jump: "w" }),
-      createPlayer(2, 100, "#D94A4A", { left: "arrowleft", right: "arrowright", jump: "arrowup" }),
+      createPlayer(2, 100, "#D94A4A", {
+        left: "arrowleft",
+        right: "arrowright",
+        jump: "arrowup",
+      }),
       createPlayer(3, 150, "#4AD94A", { left: "j", right: "l", jump: "i" }),
       createPlayer(4, 200, "#D9D94A", { left: "4", right: "6", jump: "8" }),
     ];
-    playersRef.current.forEach(p => {
+    playersRef.current.forEach((p) => {
       p.y = groundY - 100;
     });
-    
+
     // Reset boxes to initial positions
-    boxesRef.current.forEach(box => {
-      const initial = initialBoxPositions.current.find(pos => pos.id === box.id);
+    boxesRef.current.forEach((box) => {
+      const initial = initialBoxPositions.current.find(
+        (pos) => pos.id === box.id,
+      );
       if (initial) {
         box.x = initial.x;
         box.y = initial.y;
@@ -382,7 +410,7 @@ const World3 = () => {
         box.onGround = false;
       }
     });
-    
+
     keyRef.current.collected = false;
     cameraRef.current = { x: 0, y: 0 };
     setHasKey(false);
@@ -393,11 +421,11 @@ const World3 = () => {
   const handleDeath = useCallback(() => {
     if (gameState === "dead") return;
     setGameState("dead");
-    
+
     if (deathTimer.current) {
       clearTimeout(deathTimer.current);
     }
-    
+
     deathTimer.current = setTimeout(() => {
       resetGame();
     }, DEATH_FREEZE_TIME);
@@ -432,12 +460,12 @@ const World3 = () => {
         box.vy += GRAVITY;
         box.vx *= BOX_FRICTION;
         if (Math.abs(box.vx) < 0.1) box.vx = 0;
-        
+
         box.x += box.vx;
         box.y += box.vy;
-        
+
         box.onGround = false;
-        
+
         // Box vs platform collision
         platforms.forEach((platform) => {
           if (checkCollision(box, platform)) {
@@ -468,18 +496,18 @@ const World3 = () => {
             }
           }
         });
-        
+
         // Box vs other boxes collision
         boxes.forEach((otherBox) => {
           if (box.id === otherBox.id) return;
-          
+
           if (checkStandingOnBox(box, otherBox)) {
             box.y = otherBox.y - box.height;
             box.vy = 0;
             box.onGround = true;
             return;
           }
-          
+
           if (checkCollision(box, otherBox)) {
             const overlapLeft = box.x + box.width - otherBox.x;
             const overlapRight = otherBox.x + otherBox.width - box.x;
@@ -504,10 +532,13 @@ const World3 = () => {
             }
           }
         });
-        
+
         // ЗАСАГДСАН: Box respawn зөвхөн хэт доош унавал
-        if (box.y > canvasSize.height + 200) { // +100 -> +200 болгосон
-          const initial = initialBoxPositions.current.find(pos => pos.id === box.id);
+        if (box.y > canvasSize.height + 200) {
+          // +100 -> +200 болгосон
+          const initial = initialBoxPositions.current.find(
+            (pos) => pos.id === box.id,
+          );
           if (initial) {
             box.x = initial.x;
             box.y = initial.y;
@@ -515,7 +546,7 @@ const World3 = () => {
             box.vy = 0;
           }
         }
-        
+
         // Keep box in bounds
         if (box.x < 0) box.x = 0;
       });
@@ -524,7 +555,7 @@ const World3 = () => {
         if (player.dead) return;
 
         const { left, right, jump } = player.controls;
-        
+
         if (keysPressed.current.has(left)) {
           player.vx = -MOVE_SPEED;
           player.facingRight = false;
@@ -561,7 +592,7 @@ const World3 = () => {
             player.y = box.y - player.height;
             player.vy = 0;
             player.onGround = true;
-            
+
             if (box.vx !== 0) {
               player.x += box.vx;
             }
@@ -577,7 +608,7 @@ const World3 = () => {
             player.vy = 0;
             player.onGround = true;
             player.standingOnPlayer = otherPlayer.id;
-            
+
             if (otherPlayer.vx !== 0 && player.vx === 0) {
               player.x += otherPlayer.vx * 0.8;
             }
@@ -623,7 +654,11 @@ const World3 = () => {
         // ЗАСАГДСАН: Тоглогчид бие биенээ зөөлөн түлхэх
         players.forEach((otherPlayer, otherIndex) => {
           if (playerIndex === otherIndex || otherPlayer.dead) return;
-          if (player.standingOnPlayer === otherPlayer.id || otherPlayer.standingOnPlayer === player.id) return;
+          if (
+            player.standingOnPlayer === otherPlayer.id ||
+            otherPlayer.standingOnPlayer === player.id
+          )
+            return;
 
           if (checkCollision(player, otherPlayer)) {
             const overlapLeft = player.x + player.width - otherPlayer.x;
@@ -636,20 +671,26 @@ const World3 = () => {
 
             if (minOverlapX < minOverlapY) {
               // БАГАСГАСАН түлхэх хүч
-              const separation = minOverlapX / 2 * PLAYER_SEPARATION; // 0.5 -> PLAYER_SEPARATION
+              const separation = (minOverlapX / 2) * PLAYER_SEPARATION; // 0.5 -> PLAYER_SEPARATION
               if (overlapLeft < overlapRight) {
                 player.x -= separation;
                 otherPlayer.x += separation;
-                
+
                 // Зөвхөн идэвхтэй хөдөлж байх тоглогч л бусдыг түлхинэ
-                if (player.vx > 0 && keysPressed.current.has(player.controls.right)) {
+                if (
+                  player.vx > 0 &&
+                  keysPressed.current.has(player.controls.right)
+                ) {
                   otherPlayer.vx = PUSH_FORCE; // багасгасан
                 }
               } else {
                 player.x += separation;
                 otherPlayer.x -= separation;
-                
-                if (player.vx < 0 && keysPressed.current.has(player.controls.left)) {
+
+                if (
+                  player.vx < 0 &&
+                  keysPressed.current.has(player.controls.left)
+                ) {
                   otherPlayer.vx = -PUSH_FORCE; // багасгасан
                 }
               }
@@ -703,13 +744,13 @@ const World3 = () => {
 
         // Door check
         if (key.collected && checkCollision(player, door)) {
-          setPlayersAtDoor(prev => {
+          setPlayersAtDoor((prev) => {
             const newSet = new Set(prev);
             newSet.add(player.id);
             return newSet;
           });
         } else {
-          setPlayersAtDoor(prev => {
+          setPlayersAtDoor((prev) => {
             const newSet = new Set(prev);
             newSet.delete(player.id);
             return newSet;
@@ -731,9 +772,10 @@ const World3 = () => {
       }
 
       // Camera follow
-      const livingPlayers = players.filter(p => !p.dead);
+      const livingPlayers = players.filter((p) => !p.dead);
       if (livingPlayers.length > 0) {
-        const avgX = livingPlayers.reduce((sum, p) => sum + p.x, 0) / livingPlayers.length;
+        const avgX =
+          livingPlayers.reduce((sum, p) => sum + p.x, 0) / livingPlayers.length;
         const targetCameraX = avgX - canvasSize.width / 2 + PLAYER_WIDTH / 2;
         cameraRef.current.x += (targetCameraX - cameraRef.current.x) * 0.08;
         if (cameraRef.current.x < 0) cameraRef.current.x = 0;
@@ -764,7 +806,7 @@ const World3 = () => {
       { x: 500, y: 140, size: 2.5 },
       { x: 700, y: 60, size: 1.5 },
     ];
-    
+
     starPositions.forEach((star, index) => {
       const twinkle = Math.sin(animTimer.current * 0.05 + index) * 0.5 + 0.5;
       ctx.globalAlpha = twinkle * 0.8 + 0.2;
@@ -779,15 +821,22 @@ const World3 = () => {
     const moonX = canvasSize.width - 120;
     const moonY = 70;
     const moonRadius = 35;
-    
-    const moonGlow = ctx.createRadialGradient(moonX, moonY, moonRadius * 0.5, moonX, moonY, moonRadius * 2);
+
+    const moonGlow = ctx.createRadialGradient(
+      moonX,
+      moonY,
+      moonRadius * 0.5,
+      moonX,
+      moonY,
+      moonRadius * 2,
+    );
     moonGlow.addColorStop(0, "rgba(255, 255, 220, 0.3)");
     moonGlow.addColorStop(1, "rgba(255, 255, 220, 0)");
     ctx.fillStyle = moonGlow;
     ctx.beginPath();
     ctx.arc(moonX, moonY, moonRadius * 2, 0, Math.PI * 2);
     ctx.fill();
-    
+
     ctx.fillStyle = "#f5f5dc";
     ctx.beginPath();
     ctx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
@@ -801,10 +850,34 @@ const World3 = () => {
       ctx.fillStyle = "rgba(40, 50, 80, 0.4)";
       ctx.beginPath();
       ctx.arc(cloud.x, cloud.y, cloud.width * 0.25, 0, Math.PI * 2);
-      ctx.arc(cloud.x + cloud.width * 0.2, cloud.y - 10, cloud.width * 0.2, 0, Math.PI * 2);
-      ctx.arc(cloud.x + cloud.width * 0.4, cloud.y, cloud.width * 0.3, 0, Math.PI * 2);
-      ctx.arc(cloud.x + cloud.width * 0.6, cloud.y - 5, cloud.width * 0.2, 0, Math.PI * 2);
-      ctx.arc(cloud.x + cloud.width * 0.75, cloud.y + 5, cloud.width * 0.2, 0, Math.PI * 2);
+      ctx.arc(
+        cloud.x + cloud.width * 0.2,
+        cloud.y - 10,
+        cloud.width * 0.2,
+        0,
+        Math.PI * 2,
+      );
+      ctx.arc(
+        cloud.x + cloud.width * 0.4,
+        cloud.y,
+        cloud.width * 0.3,
+        0,
+        Math.PI * 2,
+      );
+      ctx.arc(
+        cloud.x + cloud.width * 0.6,
+        cloud.y - 5,
+        cloud.width * 0.2,
+        0,
+        Math.PI * 2,
+      );
+      ctx.arc(
+        cloud.x + cloud.width * 0.75,
+        cloud.y + 5,
+        cloud.width * 0.2,
+        0,
+        Math.PI * 2,
+      );
       ctx.fill();
     });
     ctx.restore();
@@ -818,17 +891,26 @@ const World3 = () => {
 
     // Draw platforms
     platforms.forEach((platform) => {
-      const grad = ctx.createLinearGradient(platform.x, platform.y, platform.x, platform.y + platform.height);
+      const grad = ctx.createLinearGradient(
+        platform.x,
+        platform.y,
+        platform.x,
+        platform.y + platform.height,
+      );
       grad.addColorStop(0, "#6B7280");
       grad.addColorStop(1, "#4B5563");
       ctx.fillStyle = grad;
       ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-      
+
       ctx.fillStyle = "#9CA3AF";
       ctx.fillRect(platform.x, platform.y, platform.width, 3);
-      
+
       ctx.fillStyle = "#374151";
-      for (let i = platform.x + 8; i < platform.x + platform.width - 8; i += 18) {
+      for (
+        let i = platform.x + 8;
+        i < platform.x + platform.width - 8;
+        i += 18
+      ) {
         ctx.beginPath();
         ctx.arc(i, platform.y + 10, 2.5, 0, Math.PI * 2);
         ctx.fill();
@@ -840,16 +922,21 @@ const World3 = () => {
       if (boxImage.current && boxImage.current.complete) {
         ctx.drawImage(boxImage.current, box.x, box.y, box.width, box.height);
       } else {
-        const boxGrad = ctx.createLinearGradient(box.x, box.y, box.x, box.y + box.height);
+        const boxGrad = ctx.createLinearGradient(
+          box.x,
+          box.y,
+          box.x,
+          box.y + box.height,
+        );
         boxGrad.addColorStop(0, "#A0826D");
         boxGrad.addColorStop(1, "#7A5C45");
         ctx.fillStyle = boxGrad;
         ctx.fillRect(box.x, box.y, box.width, box.height);
-        
+
         ctx.strokeStyle = "#5D4037";
         ctx.lineWidth = 2;
         ctx.strokeRect(box.x, box.y, box.width, box.height);
-        
+
         ctx.strokeStyle = "#6D4C41";
         ctx.beginPath();
         ctx.moveTo(box.x, box.y);
@@ -863,20 +950,38 @@ const World3 = () => {
     // Draw danger buttons
     dangerButtons.forEach((button) => {
       if (dangerButtonImage.current && dangerButtonImage.current.complete) {
-        ctx.drawImage(dangerButtonImage.current, button.x, button.y, button.width, button.height);
+        ctx.drawImage(
+          dangerButtonImage.current,
+          button.x,
+          button.y,
+          button.width,
+          button.height,
+        );
       } else {
         ctx.fillStyle = "#DC2626";
         ctx.beginPath();
-        ctx.arc(button.x + button.width / 2, button.y + button.height / 2, button.width / 2, 0, Math.PI * 2);
+        ctx.arc(
+          button.x + button.width / 2,
+          button.y + button.height / 2,
+          button.width / 2,
+          0,
+          Math.PI * 2,
+        );
         ctx.fill();
       }
-      
+
       const pulse = Math.sin(animTimer.current * 0.1) * 0.3 + 0.7;
       ctx.save();
       ctx.globalAlpha = pulse * 0.25;
       ctx.fillStyle = "#DC2626";
       ctx.beginPath();
-      ctx.arc(button.x + button.width / 2, button.y + button.height / 2, button.width / 2 + 8, 0, Math.PI * 2);
+      ctx.arc(
+        button.x + button.width / 2,
+        button.y + button.height / 2,
+        button.width / 2 + 8,
+        0,
+        Math.PI * 2,
+      );
       ctx.fill();
       ctx.restore();
     });
@@ -893,13 +998,25 @@ const World3 = () => {
     // Draw key
     if (!key.collected && keyImage.current && keyImage.current.complete) {
       const bobOffset = Math.sin(animTimer.current * 0.1) * 5;
-      ctx.drawImage(keyImage.current, key.x, key.y + bobOffset, key.width, key.height);
-      
+      ctx.drawImage(
+        keyImage.current,
+        key.x,
+        key.y + bobOffset,
+        key.width,
+        key.height,
+      );
+
       ctx.save();
       ctx.globalAlpha = 0.4;
       ctx.fillStyle = "#FCD34D";
       ctx.beginPath();
-      ctx.arc(key.x + key.width / 2, key.y + key.height / 2 + bobOffset, 25, 0, Math.PI * 2);
+      ctx.arc(
+        key.x + key.width / 2,
+        key.y + key.height / 2 + bobOffset,
+        25,
+        0,
+        Math.PI * 2,
+      );
       ctx.fill();
       ctx.restore();
     }
@@ -910,7 +1027,7 @@ const World3 = () => {
 
       const prefix = `p${player.id}`;
       let imageKey = `${prefix}-idle`;
-      
+
       if (player.animFrame !== 0) {
         imageKey = player.facingRight ? `${prefix}-right` : `${prefix}-left`;
       }
@@ -921,20 +1038,34 @@ const World3 = () => {
         ctx.save();
         ctx.shadowColor = player.color;
         ctx.shadowBlur = 10;
-        ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
+        ctx.drawImage(
+          playerImage,
+          player.x,
+          player.y,
+          player.width,
+          player.height,
+        );
         ctx.restore();
 
         ctx.fillStyle = player.color;
         ctx.font = "bold 12px Arial";
         ctx.textAlign = "center";
-        ctx.fillText(`P${player.id}`, player.x + player.width / 2, player.y - 8);
+        ctx.fillText(
+          `P${player.id}`,
+          player.x + player.width / 2,
+          player.y - 8,
+        );
       } else {
         ctx.fillStyle = player.color;
         ctx.fillRect(player.x, player.y, player.width, player.height);
         ctx.fillStyle = "#fff";
         ctx.font = "bold 12px Arial";
         ctx.textAlign = "center";
-        ctx.fillText(`P${player.id}`, player.x + player.width / 2, player.y - 8);
+        ctx.fillText(
+          `P${player.id}`,
+          player.x + player.width / 2,
+          player.y - 8,
+        );
       }
     });
 
@@ -945,17 +1076,17 @@ const World3 = () => {
     ctx.fillRect(12, 12, 300, 95);
     ctx.strokeStyle = "rgba(255,255,255,0.2)";
     ctx.strokeRect(12, 12, 300, 95);
-    
+
     ctx.fillStyle = "#fff";
     ctx.font = "bold 18px Arial";
     ctx.textAlign = "left";
     ctx.fillText("WORLD 3: TEAMWORK", 22, 35);
-    
+
     ctx.font = "16px Arial";
     ctx.fillText(`🔑 Key: ${hasKey ? "✅" : "🔒"}`, 22, 58);
     ctx.fillText(`🚪 At Door: ${playersAtDoor.size}/4`, 140, 58);
     ctx.fillText(`📦 Boxes: ${boxes.length}`, 240, 58);
-    
+
     ctx.fillStyle = "#FCD34D";
     ctx.font = "12px Arial";
     ctx.fillText("Push boxes & stack players to reach the key!", 22, 80);
@@ -967,7 +1098,7 @@ const World3 = () => {
     ctx.fillRect(12, canvasSize.height - 70, 520, 58);
     ctx.strokeStyle = "rgba(255,255,255,0.2)";
     ctx.strokeRect(12, canvasSize.height - 70, 520, 58);
-    
+
     ctx.font = "bold 11px Arial";
     const controls = [
       { label: "P1", keys: "WASD", color: "#4A90D9" },
@@ -975,7 +1106,7 @@ const World3 = () => {
       { label: "P3", keys: "I J K L", color: "#4AD94A" },
       { label: "P4", keys: "8 4 5 6", color: "#D9D94A" },
     ];
-    
+
     controls.forEach((ctrl, i) => {
       const x = 22 + i * 125;
       ctx.fillStyle = ctrl.color;
@@ -985,16 +1116,20 @@ const World3 = () => {
       ctx.fillText(ctrl.keys, x + 25, canvasSize.height - 50);
       ctx.font = "bold 11px Arial";
     });
-    
+
     ctx.fillStyle = "#9CA3AF";
     ctx.font = "10px Arial";
-    ctx.fillText("Tip: Push boxes to create stairs! Stand on boxes & teammates!", 22, canvasSize.height - 25);
+    ctx.fillText(
+      "Tip: Push boxes to create stairs! Stand on boxes & teammates!",
+      22,
+      canvasSize.height - 25,
+    );
 
     // Death screen
     if (gameState === "dead") {
       ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
       ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
-      
+
       if (deathImage.current && deathImage.current.complete) {
         const imgSize = 140;
         ctx.drawImage(
@@ -1002,22 +1137,34 @@ const World3 = () => {
           canvasSize.width / 2 - imgSize / 2,
           canvasSize.height / 2 - imgSize / 2 - 40,
           imgSize,
-          imgSize
+          imgSize,
         );
       }
-      
+
       ctx.fillStyle = "#DC2626";
       ctx.font = "bold 52px Arial";
       ctx.textAlign = "center";
-      ctx.fillText("💀 TEAM DOWN! 💀", canvasSize.width / 2, canvasSize.height / 2 + 90);
-      
+      ctx.fillText(
+        "💀 TEAM DOWN! 💀",
+        canvasSize.width / 2,
+        canvasSize.height / 2 + 90,
+      );
+
       ctx.font = "22px Arial";
       ctx.fillStyle = "#ffffff";
-      ctx.fillText("Someone touched the danger button...", canvasSize.width / 2, canvasSize.height / 2 + 125);
-      
+      ctx.fillText(
+        "Someone touched the danger button...",
+        canvasSize.width / 2,
+        canvasSize.height / 2 + 125,
+      );
+
       ctx.font = "16px Arial";
       ctx.fillStyle = "#9CA3AF";
-      ctx.fillText("Respawning...", canvasSize.width / 2, canvasSize.height / 2 + 155);
+      ctx.fillText(
+        "Respawning...",
+        canvasSize.width / 2,
+        canvasSize.height / 2 + 155,
+      );
       ctx.textAlign = "left";
     }
   }, [hasKey, gameState, canvasSize, handleDeath, playersAtDoor]);
@@ -1025,8 +1172,10 @@ const World3 = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       keysPressed.current.add(e.key.toLowerCase());
-      
-      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)) {
+
+      if (
+        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)
+      ) {
         e.preventDefault();
       }
     };
@@ -1046,7 +1195,7 @@ const World3 = () => {
 
   useEffect(() => {
     if (!imagesLoaded) return;
-    
+
     const interval = setInterval(gameLoop, 1000 / 60);
     return () => clearInterval(interval);
   }, [gameLoop, imagesLoaded]);
@@ -1061,12 +1210,16 @@ const World3 = () => {
 
   if (!imagesLoaded) {
     return (
-      <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-b from-slate-900 to-slate-800">
+      <div className="w-screen h-screen flex items-center justify-center bg-linear-to-b from-slate-900 to-slate-800">
         <div className="text-center">
-          <div className="text-4xl font-bold text-white mb-4">Loading World 3...</div>
-          <div className="text-lg text-gray-400 mb-6">4-Player Cooperative Adventure</div>
+          <div className="text-4xl font-bold text-white mb-4">
+            Loading World 3...
+          </div>
+          <div className="text-lg text-gray-400 mb-6">
+            4-Player Cooperative Adventure
+          </div>
           <div className="w-64 h-3 bg-white/20 rounded-full overflow-hidden mx-auto">
-            <div className="h-full bg-gradient-to-r from-blue-500 via-green-500 to-yellow-500 animate-pulse rounded-full"></div>
+            <div className="h-full bg-linear-to-r from-blue-500 via-green-500 to-yellow-500 animate-pulse rounded-full"></div>
           </div>
         </div>
       </div>
@@ -1074,32 +1227,35 @@ const World3 = () => {
   }
 
   return (
-    <div ref={containerRef} className="w-screen h-screen overflow-hidden bg-slate-900">
+    <div
+      ref={containerRef}
+      className="w-screen h-screen overflow-hidden bg-slate-900"
+    >
       <canvas
         ref={canvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
         className="block"
       />
-      
+
       {gameState === "won" && (
         <div className="fixed inset-0 flex flex-col items-center justify-center bg-black/85">
           <div className="text-center">
-            <h2 className="text-6xl font-bold text-yellow-400 mb-4">🎉 TEAMWORK! 🎉</h2>
-            <p className="text-white text-2xl mb-2">All 4 players made it to the door!</p>
-            <p className="text-gray-400 text-lg mb-8">True cooperation wins the day.</p>
+            <h2 className="text-6xl font-bold text-yellow-400 mb-4">
+              🎉 TEAMWORK! 🎉
+            </h2>
+            <p className="text-white text-2xl mb-2">
+              All 4 players made it to the door!
+            </p>
+            <p className="text-gray-400 text-lg mb-8">
+              True cooperation wins the day.
+            </p>
             <div className="flex gap-4 justify-center">
               <button
                 onClick={resetGame}
                 className="px-10 py-4 bg-green-600 hover:bg-green-500 text-white font-bold text-xl rounded-xl transition-all hover:scale-105 shadow-lg"
               >
                 🔄 Play Again
-              </button>
-              <button
-                onClick={() => navigate("/")}
-                className="px-10 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xl rounded-xl transition-all hover:scale-105 shadow-lg"
-              >
-                🏠 Level Select
               </button>
             </div>
           </div>

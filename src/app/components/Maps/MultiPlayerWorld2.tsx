@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
@@ -22,9 +23,20 @@ import dangerButtonImg from "@/assets/danger-button.png";
 
 // Import utilities
 import { updateCamera, Camera } from "@/app/utils/camera";
-import { createPlatforms, createDangerButtons, GAME_CONSTANTS } from "@/app/utils/gameData";
-import { loadAllImagesWorld2 as loadAllImages, getPlayerSprite, GameImages } from "@/app/utils/imageLoader";
-import { createKeyboardHandlers, getPlayerInput } from "@/app/utils/inputHandler";
+import {
+  createPlatforms,
+  createDangerButtons,
+  GAME_CONSTANTS,
+} from "@/app/utils/gameData";
+import {
+  loadAllImagesWorld2 as loadAllImages,
+  getPlayerSprite,
+  GameImages,
+} from "@/app/utils/imageLoader";
+import {
+  createKeyboardHandlers,
+  getPlayerInput,
+} from "@/app/utils/inputHandler";
 
 import {
   drawBackgroundWorld2 as drawBackground,
@@ -106,7 +118,7 @@ const MultiPlayerWorld2 = () => {
       keyImg,
       doorImg,
       deathImg,
-      dangerButtonImg
+      dangerButtonImg,
     )
       .then((images: GameImages) => {
         setGameImages(images);
@@ -119,7 +131,8 @@ const MultiPlayerWorld2 = () => {
 
   // Socket.IO connection
   useEffect(() => {
-    const SERVER_URL = process.env.REACT_APP_SERVER_URL || "http://localhost:3001";
+    const SERVER_URL =
+      process.env.REACT_APP_SERVER_URL || "http://localhost:3001";
 
     const newSocket = io(SERVER_URL, {
       transports: ["websocket"],
@@ -145,14 +158,14 @@ const MultiPlayerWorld2 = () => {
       "playerJoined",
       (data: { playerId: string; playerCount: number }) => {
         console.log("Player joined:", data);
-      }
+      },
     );
 
     newSocket.on(
       "playerLeft",
       (data: { playerId: string; playerCount: number }) => {
         console.log("Player left:", data);
-      }
+      },
     );
 
     setSocket(newSocket);
@@ -188,7 +201,9 @@ const MultiPlayerWorld2 = () => {
 
   // Keyboard handling
   useEffect(() => {
-    const { handleKeyDown, handleKeyUp } = createKeyboardHandlers(keysPressed.current);
+    const { handleKeyDown, handleKeyUp } = createKeyboardHandlers(
+      keysPressed.current,
+    );
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
@@ -215,7 +230,11 @@ const MultiPlayerWorld2 = () => {
     // Camera follow
     if (playerId && gameState.players[playerId]) {
       const myPlayer = gameState.players[playerId];
-      cameraRef.current = updateCamera(cameraRef.current, myPlayer, canvasSize.width);
+      cameraRef.current = updateCamera(
+        cameraRef.current,
+        myPlayer,
+        canvasSize.width,
+      );
     }
 
     // Draw background
@@ -229,7 +248,12 @@ const MultiPlayerWorld2 = () => {
     drawPlatforms(ctx, platforms);
     // Only draw danger buttons if image is loaded
     if (gameImages.dangerButton) {
-      drawDangerButtons(ctx, dangerButtons, animTimer.current, gameImages.dangerButton);
+      drawDangerButtons(
+        ctx,
+        dangerButtons,
+        animTimer.current,
+        gameImages.dangerButton,
+      );
     }
 
     // Draw key - FIXED: Pass KeyItem object
@@ -241,7 +265,7 @@ const MultiPlayerWorld2 = () => {
         y: keyY,
         width: 40,
         height: 40,
-        collected: false
+        collected: false,
       };
       drawKey(ctx, keyItem, gameImages.key, animTimer.current);
     }
@@ -254,7 +278,7 @@ const MultiPlayerWorld2 = () => {
         x: doorX,
         y: doorY,
         width: 60,
-        height: 80
+        height: 80,
       };
       drawDoor(ctx, doorObject, gameImages.door, gameState.keyCollected);
     }
@@ -267,7 +291,7 @@ const MultiPlayerWorld2 = () => {
         gameImages,
         player.playerId,
         player.animFrame,
-        player.facingRight
+        player.facingRight,
       );
 
       if (playerImage && playerImage.complete) {
@@ -282,28 +306,54 @@ const MultiPlayerWorld2 = () => {
           ctx.shadowBlur = 8;
         }
 
-        ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
+        ctx.drawImage(
+          playerImage,
+          player.x,
+          player.y,
+          player.width,
+          player.height,
+        );
         ctx.restore();
 
         ctx.fillStyle = player.id === playerId ? "#FFD700" : player.color;
         ctx.font = "bold 14px Arial";
         ctx.textAlign = "center";
-        ctx.fillText(`P${player.playerId}`, player.x + player.width / 2, player.y - 10);
+        ctx.fillText(
+          `P${player.playerId}`,
+          player.x + player.width / 2,
+          player.y - 10,
+        );
       }
     });
 
     ctx.restore();
 
     // Draw UI
-    drawUI(ctx, players.length, gameState.keyCollected, isConnected, canvasSize.height);
+    drawUI(
+      ctx,
+      players.length,
+      gameState.keyCollected,
+      isConnected,
+      canvasSize.height,
+    );
 
     // Overlay screens
     if (gameState.gameStatus === "waiting") {
-      drawWaitingScreen(ctx, canvasSize.width, canvasSize.height, players.length);
+      drawWaitingScreen(
+        ctx,
+        canvasSize.width,
+        canvasSize.height,
+        players.length,
+      );
     } else if (gameState.gameStatus === "won") {
       drawWinScreen(ctx, canvasSize.width, canvasSize.height);
     } else if (gameState.gameStatus === "dead") {
-      drawDeathScreen(ctx, canvasSize.width, canvasSize.height, gameImages.death);
+      drawDeathScreen(
+        ctx,
+        canvasSize.width,
+        canvasSize.height,
+        gameImages.death,
+      );
     }
   }, [gameState, playerId, canvasSize, isConnected, groundY, gameImages]);
 
@@ -346,10 +396,18 @@ const MultiPlayerWorld2 = () => {
   // Loading screen
   if (!imagesLoaded) {
     return (
-      <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-b from-slate-800 to-slate-900">
-        <div className="text-center">
-          <div className="text-4xl font-bold text-white mb-4">Loading...</div>
-          <div className="w-48 h-2 bg-white/30 rounded-full overflow-hidden">
+      <div
+        className="w-screen h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat relative"
+        style={{ backgroundImage: "url('таны-зургийн-url-энд.jpg')" }}
+      >
+        {/* Зураг дээрх текстийг тод харагдуулахын тулд бага зэрэг бараан overlay нэмж болно */}
+        <div className="absolute inset-0 bg-black/30"></div>
+
+        <div className="text-center z-10">
+          <div className="text-4xl font-bold text-white mb-4 drop-shadow-lg">
+            Loading...
+          </div>
+          <div className="w-48 h-2 bg-white/30 rounded-full overflow-hidden backdrop-blur-sm">
             <div className="h-full bg-blue-500 animate-pulse"></div>
           </div>
         </div>
@@ -360,7 +418,7 @@ const MultiPlayerWorld2 = () => {
   // Connecting screen
   if (!isConnected) {
     return (
-      <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-b from-slate-800 to-slate-900">
+      <div className="w-screen h-screen flex items-center justify-center bg-linear-to-b from-slate-800 to-slate-900">
         <div className="text-center">
           <div className="text-4xl font-bold text-white mb-4">
             Connecting to server...
@@ -376,7 +434,7 @@ const MultiPlayerWorld2 = () => {
   // Room creation/joining screen
   if (gameState.gameStatus === "waiting" && !roomId) {
     return (
-      <div className="w-screen h-screen flex flex-col items-center justify-center bg-gradient-to-b from-slate-800 to-slate-900">
+      <div className="w-screen h-screen flex flex-col items-center justify-center bg-linear-to-b from-slate-800 to-slate-900">
         <h1 className="text-5xl font-bold text-white mb-8">
           🌙 World 2: Multiplayer
         </h1>

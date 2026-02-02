@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import playerIdleImg from "@/assets/player-idle.png";
-import playerWalk1Img from "@/assets/player-right.png";
-import playerWalk2Img from "@/assets/player-left.png";
-import player2IdleImg from "@/assets/player2-idle.png";
-import player2Walk1Img from "@/assets/player2-right.png";
-import player2Walk2Img from "@/assets/player2-left.png";
-import keyImg from "@/assets/key.png";
-import doorImg from "@/assets/door.png";
-import deathImg from "@/assets/death.png";
-import dangerButtonImg from "@/assets/danger-button.png";
+
+import playerIdleImg from "@/app/assets/Finn.png";
+import playerWalk1Img from "@/app/assets/Finn-left.png";
+import playerWalk2Img from "@/app/assets/Finn-right.png";
+import player2IdleImg from "@/app/assets/Iceking.png";
+import player2Walk1Img from "@/app/assets/Ice-king-left.png";
+import player2Walk2Img from "@/app/assets/Iceking-right.png";
+import keyImg from "@/app/assets/Keys.png";
+import doorImg from "@/app/assets/Door.png";
+import deathImg from "@/app/assets/Death.png";
+import dangerButtonImg from "@/app/assets/Button.png";
 
 interface Player {
   id: number;
@@ -71,19 +71,20 @@ const PLAYER_HEIGHT = 55;
 const DEATH_FREEZE_TIME = 1500;
 
 const World2 = () => {
-  const navigate = useNavigate();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [gameState, setGameState] = useState<"playing" | "won" | "dead">("playing");
+  const [gameState, setGameState] = useState<"playing" | "won" | "dead">(
+    "playing",
+  );
   const [hasKey, setHasKey] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width: 1200, height: 700 });
   const [playersAtDoor, setPlayersAtDoor] = useState<Set<number>>(new Set());
   const [imagesLoaded, setImagesLoaded] = useState(false);
-  
+
   const keysPressed = useRef<Set<string>>(new Set());
   const animTimer = useRef(0);
   const deathTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  
+
   const playerIdle = useRef<HTMLImageElement | null>(null);
   const playerRight = useRef<HTMLImageElement | null>(null);
   const playerLeft = useRef<HTMLImageElement | null>(null);
@@ -136,7 +137,7 @@ const World2 = () => {
       const height = window.innerHeight;
       setCanvasSize({ width, height });
     };
-    
+
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -153,7 +154,10 @@ const World2 = () => {
       }
     };
 
-    const loadImage = (ref: React.MutableRefObject<HTMLImageElement | null>, src: string) => {
+    const loadImage = (
+      ref: React.MutableRefObject<HTMLImageElement | null>,
+      src: string,
+    ) => {
       ref.current = new Image();
       ref.current.onload = checkAllLoaded;
       ref.current.onerror = () => {
@@ -179,51 +183,51 @@ const World2 = () => {
   const platformsRef = useRef<Platform[]>([
     // Starting area - safe zone
     { x: 0, y: groundY, width: 250, height: 20 },
-    
+
     // Section 1: Button gauntlet beginning
     { x: 320, y: groundY, width: 60, height: 20 },
     { x: 450, y: groundY, width: 60, height: 20 },
     { x: 580, y: groundY, width: 60, height: 20 },
     { x: 710, y: groundY, width: 80, height: 20 },
-    
+
     // Section 2: Elevated platforms with buttons below
     { x: 850, y: groundY - 60, width: 100, height: 20 },
     { x: 1000, y: groundY - 100, width: 80, height: 20 },
     { x: 1130, y: groundY - 140, width: 80, height: 20 },
     { x: 1260, y: groundY - 100, width: 80, height: 20 },
     { x: 1390, y: groundY - 60, width: 100, height: 20 },
-    
+
     // Section 3: Narrow platforms over button field
     { x: 1550, y: groundY, width: 50, height: 20 },
     { x: 1660, y: groundY - 40, width: 50, height: 20 },
     { x: 1770, y: groundY, width: 50, height: 20 },
     { x: 1880, y: groundY - 40, width: 50, height: 20 },
     { x: 1990, y: groundY, width: 50, height: 20 },
-    
+
     // Section 4: High jump section - need stacking
     { x: 2100, y: groundY, width: 120, height: 20 },
     { x: 2280, y: groundY - 180, width: 100, height: 20 }, // Very high - needs stacking
     { x: 2440, y: groundY - 180, width: 100, height: 20 },
     { x: 2600, y: groundY - 120, width: 80, height: 20 },
     { x: 2740, y: groundY - 60, width: 80, height: 20 },
-    
+
     // Section 5: Final button maze
     { x: 2880, y: groundY, width: 60, height: 20 },
     { x: 3000, y: groundY - 50, width: 60, height: 20 },
     { x: 3120, y: groundY, width: 60, height: 20 },
     { x: 3240, y: groundY - 50, width: 60, height: 20 },
     { x: 3360, y: groundY, width: 60, height: 20 },
-    
+
     // Section 6: Key platform - very high, needs double stack
     { x: 3480, y: groundY, width: 150, height: 20 },
     { x: 3700, y: groundY - 220, width: 120, height: 20 }, // Key platform
-    
+
     // Section 7: Return path with buttons
     { x: 3880, y: groundY - 160, width: 80, height: 20 },
     { x: 4020, y: groundY - 100, width: 80, height: 20 },
     { x: 4160, y: groundY - 40, width: 80, height: 20 },
     { x: 4300, y: groundY, width: 100, height: 20 },
-    
+
     // Section 8: Door platform
     { x: 4460, y: groundY, width: 200, height: 20 },
   ]);
@@ -233,28 +237,28 @@ const World2 = () => {
     // Section 1 buttons between platforms - one per gap
     { x: 280, y: groundY - 35, width: 40, height: 35 },
     { x: 520, y: groundY - 35, width: 40, height: 35 },
-    
+
     // Section 2 - fewer buttons, more spaced
     { x: 920, y: groundY - 35, width: 40, height: 35 },
     { x: 1180, y: groundY - 35, width: 40, height: 35 },
     { x: 1440, y: groundY - 35, width: 40, height: 35 },
-    
+
     // Section 3 - one button per gap
     { x: 1610, y: groundY - 35, width: 40, height: 35 },
     { x: 1830, y: groundY - 35, width: 40, height: 35 },
-    
+
     // Section 4 - spaced under high platforms
     { x: 2200, y: groundY - 35, width: 40, height: 35 },
     { x: 2500, y: groundY - 35, width: 40, height: 35 },
-    
+
     // Section 5 - final maze, one per gap
     { x: 2950, y: groundY - 35, width: 40, height: 35 },
     { x: 3190, y: groundY - 35, width: 40, height: 35 },
-    
+
     // Section 6 - under key platform, spaced
     { x: 3580, y: groundY - 35, width: 40, height: 35 },
     { x: 3780, y: groundY - 35, width: 40, height: 35 },
-    
+
     // Section 7 - return path, fewer buttons
     { x: 4020, y: groundY - 35, width: 40, height: 35 },
     { x: 4300, y: groundY - 35, width: 40, height: 35 },
@@ -294,7 +298,7 @@ const World2 = () => {
 
   const checkCollision = (
     rect1: { x: number; y: number; width: number; height: number },
-    rect2: { x: number; y: number; width: number; height: number }
+    rect2: { x: number; y: number; width: number; height: number },
   ) => {
     return (
       rect1.x < rect2.x + rect2.width &&
@@ -304,18 +308,22 @@ const World2 = () => {
     );
   };
 
-  const checkPlayerStacking = (player: Player, otherPlayer: Player): boolean => {
+  const checkPlayerStacking = (
+    player: Player,
+    otherPlayer: Player,
+  ): boolean => {
     if (player.dead || otherPlayer.dead) return false;
-    
+
     const feetY = player.y + player.height;
     const headY = otherPlayer.y;
-    
-    const verticalCheck = feetY >= headY - 5 && feetY <= headY + 15 && player.vy >= 0;
-    
-    const horizontalOverlap = 
+
+    const verticalCheck =
+      feetY >= headY - 5 && feetY <= headY + 15 && player.vy >= 0;
+
+    const horizontalOverlap =
       player.x + player.width > otherPlayer.x + 10 &&
       player.x < otherPlayer.x + otherPlayer.width - 10;
-    
+
     return verticalCheck && horizontalOverlap;
   };
 
@@ -324,7 +332,7 @@ const World2 = () => {
       {
         id: 1,
         x: 50,
-        y: groundY - 100,
+        y: groundY - 500,
         vx: 0,
         vy: 0,
         width: PLAYER_WIDTH,
@@ -339,7 +347,7 @@ const World2 = () => {
       {
         id: 2,
         x: 100,
-        y: groundY - 100,
+        y: groundY - 500,
         vx: 0,
         vy: 0,
         width: PLAYER_WIDTH,
@@ -362,11 +370,11 @@ const World2 = () => {
   const handleDeath = useCallback(() => {
     if (gameState === "dead") return;
     setGameState("dead");
-    
+
     if (deathTimer.current) {
       clearTimeout(deathTimer.current);
     }
-    
+
     deathTimer.current = setTimeout(() => {
       resetGame();
     }, DEATH_FREEZE_TIME);
@@ -454,7 +462,7 @@ const World2 = () => {
             player.vy = 0;
             player.onGround = true;
             player.standingOnPlayer = otherPlayer.id;
-            
+
             if (otherPlayer.vx !== 0 && player.vx === 0) {
               player.x += otherPlayer.vx * 0.8;
             }
@@ -464,7 +472,11 @@ const World2 = () => {
         // Horizontal collision between players
         players.forEach((otherPlayer, otherIndex) => {
           if (playerIndex === otherIndex || otherPlayer.dead) return;
-          if (player.standingOnPlayer === otherPlayer.id || otherPlayer.standingOnPlayer === player.id) return;
+          if (
+            player.standingOnPlayer === otherPlayer.id ||
+            otherPlayer.standingOnPlayer === player.id
+          )
+            return;
 
           if (checkCollision(player, otherPlayer)) {
             const overlapLeft = player.x + player.width - otherPlayer.x;
@@ -476,23 +488,29 @@ const World2 = () => {
             const minOverlapY = Math.min(overlapTop, overlapBottom);
 
             if (minOverlapX < minOverlapY) {
-              const pushForce = 0.2;  // ЭНЭ НЬ СОЛИГДСОН - 0.8-аас 0.2 болсон
-              
+              const pushForce = 0.2; // ЭНЭ НЬ СОЛИГДСОН - 0.8-аас 0.2 болсон
+
               if (overlapLeft < overlapRight) {
                 const separation = minOverlapX / 2 + 0.5;
                 player.x -= separation;
                 otherPlayer.x += separation;
-                
+
                 if (player.vx > 0) {
-                  otherPlayer.vx = Math.min(otherPlayer.vx + pushForce, MOVE_SPEED);
+                  otherPlayer.vx = Math.min(
+                    otherPlayer.vx + pushForce,
+                    MOVE_SPEED,
+                  );
                 }
               } else {
                 const separation = minOverlapX / 2 + 0.5;
                 player.x += separation;
                 otherPlayer.x -= separation;
-                
+
                 if (player.vx < 0) {
-                  otherPlayer.vx = Math.max(otherPlayer.vx - pushForce, -MOVE_SPEED);
+                  otherPlayer.vx = Math.max(
+                    otherPlayer.vx - pushForce,
+                    -MOVE_SPEED,
+                  );
                 }
               }
             }
@@ -545,7 +563,7 @@ const World2 = () => {
 
         // Door check
         if (key.collected && checkCollision(player, door)) {
-          setPlayersAtDoor(prev => {
+          setPlayersAtDoor((prev) => {
             const newSet = new Set(prev);
             newSet.add(player.id);
             return newSet;
@@ -605,7 +623,7 @@ const World2 = () => {
       { x: 850, y: 30, size: 2 },
       { x: 1000, y: 120, size: 1.5 },
     ];
-    
+
     // Draw stars with twinkling effect
     starPositions.forEach((star, index) => {
       const twinkle = Math.sin(animTimer.current * 0.05 + index) * 0.5 + 0.5;
@@ -613,7 +631,7 @@ const World2 = () => {
       ctx.beginPath();
       ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
       ctx.fill();
-      
+
       // Add star glow
       ctx.globalAlpha = twinkle * 0.3;
       ctx.beginPath();
@@ -627,22 +645,29 @@ const World2 = () => {
     const moonX = canvasSize.width - 150;
     const moonY = 80;
     const moonRadius = 40;
-    
+
     // Moon glow
-    const moonGlow = ctx.createRadialGradient(moonX, moonY, moonRadius * 0.5, moonX, moonY, moonRadius * 2);
+    const moonGlow = ctx.createRadialGradient(
+      moonX,
+      moonY,
+      moonRadius * 0.5,
+      moonX,
+      moonY,
+      moonRadius * 2,
+    );
     moonGlow.addColorStop(0, "rgba(255, 255, 200, 0.3)");
     moonGlow.addColorStop(1, "rgba(255, 255, 200, 0)");
     ctx.fillStyle = moonGlow;
     ctx.beginPath();
     ctx.arc(moonX, moonY, moonRadius * 2, 0, Math.PI * 2);
     ctx.fill();
-    
+
     // Moon body
     ctx.fillStyle = "#f4f1de";
     ctx.beginPath();
     ctx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
     ctx.fill();
-    
+
     // Moon craters
     ctx.fillStyle = "rgba(220, 220, 200, 0.4)";
     ctx.beginPath();
@@ -663,10 +688,34 @@ const World2 = () => {
       ctx.fillStyle = "rgba(30, 30, 50, 0.3)";
       ctx.beginPath();
       ctx.arc(cloud.x, cloud.y, cloud.width * 0.25, 0, Math.PI * 2);
-      ctx.arc(cloud.x + cloud.width * 0.2, cloud.y - 10, cloud.width * 0.2, 0, Math.PI * 2);
-      ctx.arc(cloud.x + cloud.width * 0.4, cloud.y, cloud.width * 0.3, 0, Math.PI * 2);
-      ctx.arc(cloud.x + cloud.width * 0.6, cloud.y - 5, cloud.width * 0.2, 0, Math.PI * 2);
-      ctx.arc(cloud.x + cloud.width * 0.75, cloud.y + 5, cloud.width * 0.2, 0, Math.PI * 2);
+      ctx.arc(
+        cloud.x + cloud.width * 0.2,
+        cloud.y - 10,
+        cloud.width * 0.2,
+        0,
+        Math.PI * 2,
+      );
+      ctx.arc(
+        cloud.x + cloud.width * 0.4,
+        cloud.y,
+        cloud.width * 0.3,
+        0,
+        Math.PI * 2,
+      );
+      ctx.arc(
+        cloud.x + cloud.width * 0.6,
+        cloud.y - 5,
+        cloud.width * 0.2,
+        0,
+        Math.PI * 2,
+      );
+      ctx.arc(
+        cloud.x + cloud.width * 0.75,
+        cloud.y + 5,
+        cloud.width * 0.2,
+        0,
+        Math.PI * 2,
+      );
       ctx.fill();
     });
     ctx.restore();
@@ -683,14 +732,18 @@ const World2 = () => {
       // Metal base
       ctx.fillStyle = "#5D6D7E";
       ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-      
+
       // Top highlight
       ctx.fillStyle = "#85929E";
       ctx.fillRect(platform.x, platform.y, platform.width, 4);
-      
+
       // Rivets
       ctx.fillStyle = "#2C3E50";
-      for (let i = platform.x + 10; i < platform.x + platform.width - 10; i += 20) {
+      for (
+        let i = platform.x + 10;
+        i < platform.x + platform.width - 10;
+        i += 20
+      ) {
         ctx.beginPath();
         ctx.arc(i, platform.y + 10, 3, 0, Math.PI * 2);
         ctx.fill();
@@ -700,26 +753,50 @@ const World2 = () => {
     // Draw danger buttons
     dangerButtons.forEach((button) => {
       if (dangerButtonImage.current && dangerButtonImage.current.complete) {
-        ctx.drawImage(dangerButtonImage.current, button.x, button.y, button.width, button.height);
+        ctx.drawImage(
+          dangerButtonImage.current,
+          button.x,
+          button.y,
+          button.width,
+          button.height,
+        );
       } else {
         // Fallback red button
         ctx.fillStyle = "#E74C3C";
         ctx.beginPath();
-        ctx.arc(button.x + button.width / 2, button.y + button.height / 2, button.width / 2, 0, Math.PI * 2);
+        ctx.arc(
+          button.x + button.width / 2,
+          button.y + button.height / 2,
+          button.width / 2,
+          0,
+          Math.PI * 2,
+        );
         ctx.fill();
         ctx.fillStyle = "#C0392B";
         ctx.beginPath();
-        ctx.arc(button.x + button.width / 2, button.y + button.height / 2 + 3, button.width / 2 - 5, 0, Math.PI * 2);
+        ctx.arc(
+          button.x + button.width / 2,
+          button.y + button.height / 2 + 3,
+          button.width / 2 - 5,
+          0,
+          Math.PI * 2,
+        );
         ctx.fill();
       }
-      
+
       // Pulsing glow effect
       const pulse = Math.sin(animTimer.current * 0.1) * 0.3 + 0.7;
       ctx.save();
       ctx.globalAlpha = pulse * 0.3;
       ctx.fillStyle = "#E74C3C";
       ctx.beginPath();
-      ctx.arc(button.x + button.width / 2, button.y + button.height / 2, button.width / 2 + 10, 0, Math.PI * 2);
+      ctx.arc(
+        button.x + button.width / 2,
+        button.y + button.height / 2,
+        button.width / 2 + 10,
+        0,
+        Math.PI * 2,
+      );
       ctx.fill();
       ctx.restore();
     });
@@ -736,14 +813,26 @@ const World2 = () => {
     // Draw key
     if (!key.collected && keyImage.current && keyImage.current.complete) {
       const bobOffset = Math.sin(animTimer.current * 0.1) * 5;
-      ctx.drawImage(keyImage.current, key.x, key.y + bobOffset, key.width, key.height);
-      
+      ctx.drawImage(
+        keyImage.current,
+        key.x,
+        key.y + bobOffset,
+        key.width,
+        key.height,
+      );
+
       // Glow effect
       ctx.save();
       ctx.globalAlpha = 0.3;
       ctx.fillStyle = "#F1C40F";
       ctx.beginPath();
-      ctx.arc(key.x + key.width / 2, key.y + key.height / 2 + bobOffset, 30, 0, Math.PI * 2);
+      ctx.arc(
+        key.x + key.width / 2,
+        key.y + key.height / 2 + bobOffset,
+        30,
+        0,
+        Math.PI * 2,
+      );
       ctx.fill();
       ctx.restore();
     }
@@ -753,18 +842,22 @@ const World2 = () => {
       if (player.dead) return;
 
       let playerImage: HTMLImageElement | null = null;
-      
+
       if (player.id === 1) {
         if (player.animFrame === 0) {
           playerImage = playerIdle.current;
         } else {
-          playerImage = player.facingRight ? playerRight.current : playerLeft.current;
+          playerImage = player.facingRight
+            ? playerRight.current
+            : playerLeft.current;
         }
       } else {
         if (player.animFrame === 0) {
           playerImage = player2Idle.current;
         } else {
-          playerImage = player.facingRight ? player2Right.current : player2Left.current;
+          playerImage = player.facingRight
+            ? player2Right.current
+            : player2Left.current;
         }
       }
 
@@ -772,13 +865,23 @@ const World2 = () => {
         ctx.save();
         ctx.shadowColor = player.color;
         ctx.shadowBlur = 8;
-        ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
+        ctx.drawImage(
+          playerImage,
+          player.x,
+          player.y,
+          player.width,
+          player.height,
+        );
         ctx.restore();
 
         ctx.fillStyle = player.color;
         ctx.font = "bold 14px Arial";
         ctx.textAlign = "center";
-        ctx.fillText(`P${player.id}`, player.x + player.width / 2, player.y - 10);
+        ctx.fillText(
+          `P${player.id}`,
+          player.x + player.width / 2,
+          player.y - 10,
+        );
       }
     });
 
@@ -809,13 +912,17 @@ const World2 = () => {
     ctx.fillStyle = "#D94A4A";
     ctx.fillText("P2: Arrow Keys", 120, canvasSize.height - 32);
     ctx.fillStyle = "#fff";
-    ctx.fillText("| Stack to reach high platforms!", 240, canvasSize.height - 32);
+    ctx.fillText(
+      "| Stack to reach high platforms!",
+      240,
+      canvasSize.height - 32,
+    );
 
     // Death screen
     if (gameState === "dead") {
       ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
       ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
-      
+
       if (deathImage.current && deathImage.current.complete) {
         const imgSize = 150;
         ctx.drawImage(
@@ -823,17 +930,25 @@ const World2 = () => {
           canvasSize.width / 2 - imgSize / 2,
           canvasSize.height / 2 - imgSize / 2 - 30,
           imgSize,
-          imgSize
+          imgSize,
         );
       }
-      
+
       ctx.fillStyle = "#E74C3C";
       ctx.font = "bold 48px Arial";
       ctx.textAlign = "center";
-      ctx.fillText("BUTTON PRESSED! 💀", canvasSize.width / 2, canvasSize.height / 2 + 100);
+      ctx.fillText(
+        "BUTTON PRESSED! 💀",
+        canvasSize.width / 2,
+        canvasSize.height / 2 + 100,
+      );
       ctx.font = "24px Arial";
       ctx.fillStyle = "#ffffff";
-      ctx.fillText("Don't touch the red buttons!", canvasSize.width / 2, canvasSize.height / 2 + 140);
+      ctx.fillText(
+        "Don't touch the red buttons!",
+        canvasSize.width / 2,
+        canvasSize.height / 2 + 140,
+      );
       ctx.textAlign = "left";
     }
   }, [hasKey, gameState, canvasSize, handleDeath, playersAtDoor]);
@@ -841,8 +956,10 @@ const World2 = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       keysPressed.current.add(e.key.toLowerCase());
-      
-      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)) {
+
+      if (
+        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)
+      ) {
         e.preventDefault();
       }
     };
@@ -862,7 +979,7 @@ const World2 = () => {
 
   useEffect(() => {
     if (!imagesLoaded) return;
-    
+
     const interval = setInterval(gameLoop, 1000 / 60);
     return () => clearInterval(interval);
   }, [gameLoop, imagesLoaded]);
@@ -877,9 +994,11 @@ const World2 = () => {
 
   if (!imagesLoaded) {
     return (
-      <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-b from-slate-800 to-slate-900">
+      <div className="w-screen h-screen flex items-center justify-center bg-linerar-to-b from-slate-800 to-slate-900">
         <div className="text-center">
-          <div className="text-4xl font-bold text-white mb-4">Loading World 2...</div>
+          <div className="text-4xl font-bold text-white mb-4">
+            Loading World 2...
+          </div>
           <div className="w-48 h-2 bg-white/30 rounded-full overflow-hidden">
             <div className="h-full bg-red-500 animate-pulse"></div>
           </div>
@@ -889,30 +1008,31 @@ const World2 = () => {
   }
 
   return (
-    <div ref={containerRef} className="w-screen h-screen overflow-hidden bg-slate-900">
+    <div
+      ref={containerRef}
+      className="w-screen h-screen overflow-hidden bg-slate-900"
+    >
       <canvas
         ref={canvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
         className="block"
       />
-      
+
       {gameState === "won" && (
         <div className="fixed inset-0 flex flex-col items-center justify-center bg-black/80">
-          <h2 className="text-6xl font-bold text-yellow-400 mb-6">🎉 Level Complete!</h2>
-          <p className="text-white text-2xl mb-8">You avoided all the deadly buttons!</p>
+          <h2 className="text-6xl font-bold text-yellow-400 mb-6">
+            🎉 Level Complete!
+          </h2>
+          <p className="text-white text-2xl mb-8">
+            You avoided all the deadly buttons!
+          </p>
           <div className="flex gap-4">
             <button
               onClick={resetGame}
               className="px-10 py-5 bg-green-600 hover:bg-green-500 text-white font-bold text-2xl rounded-xl transition-all hover:scale-105 shadow-lg"
             >
               🔄 Play Again
-            </button>
-            <button
-              onClick={() => navigate("/")}
-              className="px-10 py-5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-2xl rounded-xl transition-all hover:scale-105 shadow-lg"
-            >
-              🏠 Level Select
             </button>
           </div>
         </div>

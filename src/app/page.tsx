@@ -1,9 +1,9 @@
 "use client";
-import  WORLD1 from "@/app/components/World1";
+import WORLD2 from "@/app/components/Maps/World2";
 const Home = () => {
   return (
     <div>
-     <WORLD1 />
+      <WORLD2 />
     </div>
   );
 };

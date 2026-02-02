@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import playerIdleImg from "@/assets/player-idle.png";
-import playerWalk1Img from "@/assets/player-right.png";
-import playerWalk2Img from "@/assets/player-left.png";
-import player2IdleImg from "@/assets/player2-idle.png";
-import player2Walk1Img from "@/assets/player2-right.png";
-import player2Walk2Img from "@/assets/player2-left.png";
-import keyImg from "@/assets/key.png";
-import doorImg from "@/assets/door.png";
-import deathImg from "@/assets/death.png";
+import playerIdleImg from "@/app/assets/Finn.png";
+import playerWalk1Img from "@/app/assets/Finn-right.png";
+import playerWalk2Img from "@/app/assets/Finn-left.png";
+import player2IdleImg from "@/app/assets/Iceking.png";
+import player2Walk1Img from "@/app/assets/Iceking-right.png";
+import player2Walk2Img from "@/app/assets/Ice-king-left.png";
+import keyImg from "@/app/assets/Keys.png";
+import doorImg from "@/app/assets/Door.png";
+import deathImg from "@/app/assets/Death.png";
 
 interface Player {
   id: number;
@@ -77,16 +77,18 @@ const DEATH_FREEZE_TIME = 1500;
 const World1 = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [gameState, setGameState] = useState<"playing" | "won" | "dead">("playing");
+  const [gameState, setGameState] = useState<"playing" | "won" | "dead">(
+    "playing",
+  );
   const [hasKey, setHasKey] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width: 1200, height: 700 });
   const [playersAtDoor, setPlayersAtDoor] = useState<Set<number>>(new Set());
   const [imagesLoaded, setImagesLoaded] = useState(false);
-  
+
   const keysPressed = useRef<Set<string>>(new Set());
   const animTimer = useRef(0);
   const deathTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  
+
   const playerIdle = useRef<HTMLImageElement | null>(null);
   const playerRight = useRef<HTMLImageElement | null>(null);
   const playerLeft = useRef<HTMLImageElement | null>(null);
@@ -96,7 +98,6 @@ const World1 = () => {
   const keyImage = useRef<HTMLImageElement | null>(null);
   const doorImage = useRef<HTMLImageElement | null>(null);
   const deathImage = useRef<HTMLImageElement | null>(null);
-
   const groundY = canvasSize.height - 80;
 
   // Two players - P1 uses WASD, P2 uses Arrow keys
@@ -139,7 +140,7 @@ const World1 = () => {
       const height = window.innerHeight;
       setCanvasSize({ width, height });
     };
-    
+
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -162,7 +163,8 @@ const World1 = () => {
       console.error("Failed to load player idle image");
       checkAllLoaded();
     };
-    playerIdle.current.src = typeof playerIdleImg === 'string' ? playerIdleImg : playerIdleImg.src;
+    playerIdle.current.src =
+      typeof playerIdleImg === "string" ? playerIdleImg : playerIdleImg.src;
 
     playerRight.current = new Image();
     playerRight.current.onload = checkAllLoaded;
@@ -170,7 +172,8 @@ const World1 = () => {
       console.error("Failed to load player right image");
       checkAllLoaded();
     };
-    playerRight.current.src = typeof playerWalk1Img === 'string' ? playerWalk1Img : playerWalk1Img.src;
+    playerRight.current.src =
+      typeof playerWalk1Img === "string" ? playerWalk1Img : playerWalk1Img.src;
 
     playerLeft.current = new Image();
     playerLeft.current.onload = checkAllLoaded;
@@ -178,7 +181,8 @@ const World1 = () => {
       console.error("Failed to load player left image");
       checkAllLoaded();
     };
-    playerLeft.current.src = typeof playerWalk2Img === 'string' ? playerWalk2Img : playerWalk2Img.src;
+    playerLeft.current.src =
+      typeof playerWalk2Img === "string" ? playerWalk2Img : playerWalk2Img.src;
 
     player2Idle.current = new Image();
     player2Idle.current.onload = checkAllLoaded;
@@ -186,7 +190,8 @@ const World1 = () => {
       console.error("Failed to load player 2 idle image");
       checkAllLoaded();
     };
-    player2Idle.current.src = typeof player2IdleImg === 'string' ? player2IdleImg : player2IdleImg.src;
+    player2Idle.current.src =
+      typeof player2IdleImg === "string" ? player2IdleImg : player2IdleImg.src;
 
     player2Right.current = new Image();
     player2Right.current.onload = checkAllLoaded;
@@ -194,7 +199,10 @@ const World1 = () => {
       console.error("Failed to load player 2 right image");
       checkAllLoaded();
     };
-    player2Right.current.src = typeof player2Walk1Img === 'string' ? player2Walk1Img : player2Walk1Img.src;
+    player2Right.current.src =
+      typeof player2Walk1Img === "string"
+        ? player2Walk1Img
+        : player2Walk1Img.src;
 
     player2Left.current = new Image();
     player2Left.current.onload = checkAllLoaded;
@@ -202,7 +210,10 @@ const World1 = () => {
       console.error("Failed to load player 2 left image");
       checkAllLoaded();
     };
-    player2Left.current.src = typeof player2Walk2Img === 'string' ? player2Walk2Img : player2Walk2Img.src;
+    player2Left.current.src =
+      typeof player2Walk2Img === "string"
+        ? player2Walk2Img
+        : player2Walk2Img.src;
 
     keyImage.current = new Image();
     keyImage.current.onload = checkAllLoaded;
@@ -210,7 +221,7 @@ const World1 = () => {
       console.error("Failed to load key image");
       checkAllLoaded();
     };
-    keyImage.current.src = typeof keyImg === 'string' ? keyImg : keyImg.src;
+    keyImage.current.src = typeof keyImg === "string" ? keyImg : keyImg.src;
 
     doorImage.current = new Image();
     doorImage.current.onload = checkAllLoaded;
@@ -218,7 +229,7 @@ const World1 = () => {
       console.error("Failed to load door image");
       checkAllLoaded();
     };
-    doorImage.current.src = typeof doorImg === 'string' ? doorImg : doorImg.src;
+    doorImage.current.src = typeof doorImg === "string" ? doorImg : doorImg.src;
 
     deathImage.current = new Image();
     deathImage.current.onload = checkAllLoaded;
@@ -226,52 +237,128 @@ const World1 = () => {
       console.error("Failed to load death image");
       checkAllLoaded();
     };
-    deathImage.current.src = typeof deathImg === 'string' ? deathImg : deathImg.src;
+    deathImage.current.src =
+      typeof deathImg === "string" ? deathImg : deathImg.src;
   }, []);
 
   const platformsRef = useRef<Platform[]>([
-    { x: 0, y: groundY, width: 180, height: 20 },
-    { x: 200, y: groundY - 30, width: 80, height: 20 },
-    { x: 310, y: groundY - 70, width: 70, height: 20 },
-    { x: 410, y: groundY - 110, width: 65, height: 20 },
-    { x: 505, y: groundY - 155, width: 70, height: 20 },
-    { x: 605, y: groundY - 200, width: 85, height: 20 },
-    { x: 720, y: groundY - 200, width: 100, height: 20 },
-    { x: 850, y: groundY - 165, width: 70, height: 20 },
-    { x: 950, y: groundY - 120, width: 65, height: 20 },
-    { x: 1045, y: groundY - 75, width: 75, height: 20 },
-    { x: 1150, y: groundY - 30, width: 80, height: 20 },
-    { x: 1260, y: groundY, width: 100, height: 20 },
-    { x: 1390, y: groundY - 50, width: 70, height: 20 },
-    { x: 1490, y: groundY - 100, width: 65, height: 20 },
-    { x: 1585, y: groundY - 155, width: 70, height: 20 },
-    { x: 1685, y: groundY - 210, width: 75, height: 20 },
-    { x: 1790, y: groundY - 270, width: 90, height: 20 },
-    { x: 1910, y: groundY - 320, width: 120, height: 20 },
-    { x: 2060, y: groundY - 280, width: 70, height: 20 },
-    { x: 2160, y: groundY - 230, width: 65, height: 20 },
-    { x: 2255, y: groundY - 175, width: 70, height: 20 },
-    { x: 2355, y: groundY - 120, width: 75, height: 20 },
-    { x: 2460, y: groundY - 60, width: 80, height: 20 },
-    { x: 2570, y: groundY - 110, width: 70, height: 20 },
-    { x: 2670, y: groundY - 170, width: 65, height: 20 },
-    { x: 2765, y: groundY - 235, width: 70, height: 20 },
-    { x: 2865, y: groundY - 305, width: 85, height: 20 },
-    { x: 2980, y: groundY - 360, width: 150, height: 20 },
+    { x: 0, y: groundY + 40, width: 250, height: 20 },
+    { x: 320, y: groundY + 40, width: 60, height: 20 },
+    { x: 450, y: groundY + 40, width: 60, height: 20 },
+    { x: 580, y: groundY + 40, width: 60, height: 20 },
+    { x: 710, y: groundY + 40, width: 60, height: 20 },
+    { x: 840, y: groundY + 40, width: 80, height: 20 },
+    { x: 1100, y: groundY - 20, width: 100, height: 20 },
+    { x: 1280, y: groundY - 50, width: 80, height: 20 },
+    { x: 1440, y: groundY - 70, width: 80, height: 20 },
+    { x: 1600, y: groundY - 50, width: 80, height: 20 },
+    { x: 1760, y: groundY - 20, width: 100, height: 20 },
+    { x: 2000, y: groundY + 20, width: 50, height: 20 },
+    { x: 2120, y: groundY + 40, width: 50, height: 20 },
+    { x: 2240, y: groundY + 20, width: 50, height: 20 },
+    { x: 2360, y: groundY + 40, width: 50, height: 20 },
+    { x: 2480, y: groundY + 20, width: 50, height: 20 },
+    { x: 2600, y: groundY + 40, width: 50, height: 20 },
+    { x: 2720, y: groundY + 40, width: 120, height: 20 },
+    { x: 3020, y: groundY - 90, width: 100, height: 20 },
+    { x: 3200, y: groundY - 90, width: 100, height: 20 },
+    { x: 3380, y: groundY - 60, width: 80, height: 20 },
+    { x: 3540, y: groundY - 30, width: 80, height: 20 },
+    { x: 3700, y: groundY + 40, width: 60, height: 20 },
+    { x: 3850, y: groundY + 15, width: 60, height: 20 },
+    { x: 3990, y: groundY + 40, width: 60, height: 20 },
+    { x: 4130, y: groundY + 15, width: 60, height: 20 },
+    { x: 4270, y: groundY + 40, width: 60, height: 20 },
+    { x: 4410, y: groundY + 40, width: 150, height: 20 },
+    { x: 4760, y: groundY - 100, width: 120, height: 20 },
+    { x: 4960, y: groundY - 80, width: 80, height: 20 },
+    { x: 5120, y: groundY - 50, width: 80, height: 20 },
+    { x: 5280, y: groundY - 20, width: 80, height: 20 },
+    { x: 5440, y: groundY + 20, width: 100, height: 20 },
+    { x: 5620, y: groundY + 40, width: 200, height: 20 },
   ]);
 
   const movingPlatformsRef = useRef<MovingPlatform[]>([
-    { x: 650, y: groundY - 250, width: 70, height: 20, startX: 605, endX: 720, speed: 2, direction: 1 },
-    { x: 1120, y: groundY - 60, width: 60, height: 20, startX: 1045, endX: 1150, speed: 1.8, direction: 1 },
-    { x: 1730, y: groundY - 240, width: 60, height: 20, startX: 1685, endX: 1790, speed: 2.5, direction: 1 },
-    { x: 2410, y: groundY - 90, width: 60, height: 20, startX: 2355, endX: 2460, speed: 2, direction: 1 },
-    { x: 2815, y: groundY - 275, width: 60, height: 20, startX: 2765, endX: 2865, speed: 1.8, direction: 1 },
+    {
+      x: 650,
+      y: groundY - 250,
+      width: 70,
+      height: 20,
+      startX: 605,
+      endX: 720,
+      speed: 2,
+      direction: 1,
+    },
+    {
+      x: 1120,
+      y: groundY - 60,
+      width: 60,
+      height: 20,
+      startX: 1045,
+      endX: 1150,
+      speed: 1.8,
+      direction: 1,
+    },
+    {
+      x: 1730,
+      y: groundY - 240,
+      width: 60,
+      height: 20,
+      startX: 1685,
+      endX: 1790,
+      speed: 2.5,
+      direction: 1,
+    },
+    {
+      x: 2410,
+      y: groundY - 90,
+      width: 60,
+      height: 20,
+      startX: 2355,
+      endX: 2460,
+      speed: 2,
+      direction: 1,
+    },
+    {
+      x: 2815,
+      y: groundY - 275,
+      width: 60,
+      height: 20,
+      startX: 2765,
+      endX: 2865,
+      speed: 1.8,
+      direction: 1,
+    },
   ]);
 
   const fallingPlatformsRef = useRef<FallingPlatform[]>([
-    { x: 275, y: groundY - 50, width: 55, height: 20, falling: false, fallTimer: 0, originalY: groundY - 50 },
-    { x: 1225, y: groundY - 15, width: 55, height: 20, falling: false, fallTimer: 0, originalY: groundY - 15 },
-    { x: 2220, y: groundY - 205, width: 55, height: 20, falling: false, fallTimer: 0, originalY: groundY - 205 },
+    {
+      x: 275,
+      y: groundY - 50,
+      width: 55,
+      height: 20,
+      falling: false,
+      fallTimer: 0,
+      originalY: groundY - 50,
+    },
+    {
+      x: 1225,
+      y: groundY - 15,
+      width: 55,
+      height: 20,
+      falling: false,
+      fallTimer: 0,
+      originalY: groundY - 15,
+    },
+    {
+      x: 2220,
+      y: groundY - 205,
+      width: 55,
+      height: 20,
+      falling: false,
+      fallTimer: 0,
+      originalY: groundY - 205,
+    },
   ]);
 
   const cloudsRef = useRef<Cloud[]>([
@@ -305,7 +392,7 @@ const World1 = () => {
 
   const checkCollision = (
     rect1: { x: number; y: number; width: number; height: number },
-    rect2: { x: number; y: number; width: number; height: number }
+    rect2: { x: number; y: number; width: number; height: number },
   ) => {
     return (
       rect1.x < rect2.x + rect2.width &&
@@ -315,18 +402,22 @@ const World1 = () => {
     );
   };
 
-  const checkPlayerStacking = (player: Player, otherPlayer: Player): boolean => {
+  const checkPlayerStacking = (
+    player: Player,
+    otherPlayer: Player,
+  ): boolean => {
     if (player.dead || otherPlayer.dead) return false;
-    
+
     const feetY = player.y + player.height;
     const headY = otherPlayer.y;
-    
-    const verticalCheck = feetY >= headY - 5 && feetY <= headY + 15 && player.vy >= 0;
-    
-    const horizontalOverlap = 
+
+    const verticalCheck =
+      feetY >= headY - 5 && feetY <= headY + 15 && player.vy >= 0;
+
+    const horizontalOverlap =
       player.x + player.width > otherPlayer.x + 10 &&
       player.x < otherPlayer.x + otherPlayer.width - 10;
-    
+
     return verticalCheck && horizontalOverlap;
   };
 
@@ -335,7 +426,7 @@ const World1 = () => {
       {
         id: 1,
         x: 50,
-        y: groundY - 100,
+        y: groundY - 500,
         vx: 0,
         vy: 0,
         width: PLAYER_WIDTH,
@@ -350,7 +441,7 @@ const World1 = () => {
       {
         id: 2,
         x: 100,
-        y: groundY - 100,
+        y: groundY - 500,
         vx: 0,
         vy: 0,
         width: PLAYER_WIDTH,
@@ -364,7 +455,7 @@ const World1 = () => {
       },
     ];
     keyRef.current.collected = false;
-    fallingPlatformsRef.current.forEach(fp => {
+    fallingPlatformsRef.current.forEach((fp) => {
       fp.falling = false;
       fp.fallTimer = 0;
       fp.y = fp.originalY;
@@ -378,11 +469,11 @@ const World1 = () => {
   const handleDeath = useCallback(() => {
     if (gameState === "dead") return;
     setGameState("dead");
-    
+
     if (deathTimer.current) {
       clearTimeout(deathTimer.current);
     }
-    
+
     deathTimer.current = setTimeout(() => {
       resetGame();
     }, DEATH_FREEZE_TIME);
@@ -486,7 +577,7 @@ const World1 = () => {
             player.vy = 0;
             player.onGround = true;
             player.standingOnPlayer = otherPlayer.id;
-            
+
             if (otherPlayer.vx !== 0 && player.vx === 0) {
               player.x += otherPlayer.vx * 0.8;
             }
@@ -495,7 +586,11 @@ const World1 = () => {
 
         players.forEach((otherPlayer, otherIndex) => {
           if (playerIndex === otherIndex || otherPlayer.dead) return;
-          if (player.standingOnPlayer === otherPlayer.id || otherPlayer.standingOnPlayer === player.id) return;
+          if (
+            player.standingOnPlayer === otherPlayer.id ||
+            otherPlayer.standingOnPlayer === player.id
+          )
+            return;
 
           if (checkCollision(player, otherPlayer)) {
             const overlapLeft = player.x + player.width - otherPlayer.x;
@@ -508,29 +603,39 @@ const World1 = () => {
 
             if (minOverlapX < minOverlapY) {
               const pushForce = 0.2;
-              
+
               if (overlapLeft < overlapRight) {
                 const separation = minOverlapX / 2 + 0.5;
                 player.x -= separation;
                 otherPlayer.x += separation;
-                
+
                 if (player.vx > 0) {
-                  otherPlayer.vx = Math.min(otherPlayer.vx + pushForce, MOVE_SPEED);
+                  otherPlayer.vx = Math.min(
+                    otherPlayer.vx + pushForce,
+                    MOVE_SPEED,
+                  );
                 }
               } else {
                 const separation = minOverlapX / 2 + 0.5;
                 player.x += separation;
                 otherPlayer.x -= separation;
-                
+
                 if (player.vx < 0) {
-                  otherPlayer.vx = Math.max(otherPlayer.vx - pushForce, -MOVE_SPEED);
+                  otherPlayer.vx = Math.max(
+                    otherPlayer.vx - pushForce,
+                    -MOVE_SPEED,
+                  );
                 }
               }
             }
           }
         });
 
-        const allPlatforms: Platform[] = [...platforms, ...movingPlatforms, ...fallingPlatforms.filter(fp => fp.y < canvasSize.height)];
+        const allPlatforms: Platform[] = [
+          ...platforms,
+          ...movingPlatforms,
+          ...fallingPlatforms.filter((fp) => fp.y < canvasSize.height),
+        ];
 
         allPlatforms.forEach((platform) => {
           if (checkCollision(player, platform)) {
@@ -547,9 +652,11 @@ const World1 = () => {
                 player.y = platform.y - player.height;
                 player.vy = 0;
                 player.onGround = true;
-                
+
                 const fallingPlatform = fallingPlatforms.find(
-                  fp => fp.x === platform.x && fp.originalY === (platform as FallingPlatform).originalY
+                  (fp) =>
+                    fp.x === platform.x &&
+                    fp.originalY === (platform as FallingPlatform).originalY,
                 );
                 if (fallingPlatform && !fallingPlatform.falling) {
                   fallingPlatform.falling = true;
@@ -575,7 +682,7 @@ const World1 = () => {
         }
 
         if (key.collected && checkCollision(player, door)) {
-          setPlayersAtDoor(prev => {
+          setPlayersAtDoor((prev) => {
             const newSet = new Set(prev);
             newSet.add(player.id);
             return newSet;
@@ -622,8 +729,14 @@ const World1 = () => {
     for (let i = 0; i < 12; i++) {
       const angle = (i * 30 * Math.PI) / 180;
       ctx.beginPath();
-      ctx.moveTo(canvasSize.width - 100 + Math.cos(angle) * 70, 100 + Math.sin(angle) * 70);
-      ctx.lineTo(canvasSize.width - 100 + Math.cos(angle) * 110, 100 + Math.sin(angle) * 110);
+      ctx.moveTo(
+        canvasSize.width - 100 + Math.cos(angle) * 70,
+        100 + Math.sin(angle) * 70,
+      );
+      ctx.lineTo(
+        canvasSize.width - 100 + Math.cos(angle) * 110,
+        100 + Math.sin(angle) * 110,
+      );
       ctx.stroke();
     }
 
@@ -633,10 +746,34 @@ const World1 = () => {
       ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
       ctx.beginPath();
       ctx.arc(cloud.x, cloud.y, cloud.width * 0.25, 0, Math.PI * 2);
-      ctx.arc(cloud.x + cloud.width * 0.2, cloud.y - 10, cloud.width * 0.2, 0, Math.PI * 2);
-      ctx.arc(cloud.x + cloud.width * 0.4, cloud.y, cloud.width * 0.3, 0, Math.PI * 2);
-      ctx.arc(cloud.x + cloud.width * 0.6, cloud.y - 5, cloud.width * 0.2, 0, Math.PI * 2);
-      ctx.arc(cloud.x + cloud.width * 0.75, cloud.y + 5, cloud.width * 0.2, 0, Math.PI * 2);
+      ctx.arc(
+        cloud.x + cloud.width * 0.2,
+        cloud.y - 10,
+        cloud.width * 0.2,
+        0,
+        Math.PI * 2,
+      );
+      ctx.arc(
+        cloud.x + cloud.width * 0.4,
+        cloud.y,
+        cloud.width * 0.3,
+        0,
+        Math.PI * 2,
+      );
+      ctx.arc(
+        cloud.x + cloud.width * 0.6,
+        cloud.y - 5,
+        cloud.width * 0.2,
+        0,
+        Math.PI * 2,
+      );
+      ctx.arc(
+        cloud.x + cloud.width * 0.75,
+        cloud.y + 5,
+        cloud.width * 0.2,
+        0,
+        Math.PI * 2,
+      );
       ctx.fill();
     });
     ctx.restore();
@@ -651,7 +788,12 @@ const World1 = () => {
       ctx.fillStyle = "#228B22";
       ctx.fillRect(platform.x, platform.y, platform.width, 8);
       ctx.fillStyle = "#8B4513";
-      ctx.fillRect(platform.x, platform.y + 8, platform.width, platform.height - 8);
+      ctx.fillRect(
+        platform.x,
+        platform.y + 8,
+        platform.width,
+        platform.height - 8,
+      );
     });
 
     movingPlatforms.forEach((platform) => {
@@ -686,14 +828,20 @@ const World1 = () => {
 
     if (!key.collected && keyImage.current && keyImage.current.complete) {
       const bobOffset = Math.sin(animTimer.current * 0.1) * 5;
-      ctx.drawImage(keyImage.current, key.x, key.y + bobOffset, key.width, key.height);
+      ctx.drawImage(
+        keyImage.current,
+        key.x,
+        key.y + bobOffset,
+        key.width,
+        key.height,
+      );
     }
 
     players.forEach((player) => {
       if (player.dead) return;
 
       let playerImage: HTMLImageElement | null = null;
-      
+
       if (player.id === 1) {
         if (player.animFrame === 0) {
           playerImage = playerIdle.current;
@@ -720,13 +868,23 @@ const World1 = () => {
         ctx.save();
         ctx.shadowColor = player.color;
         ctx.shadowBlur = 8;
-        ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
+        ctx.drawImage(
+          playerImage,
+          player.x,
+          player.y,
+          player.width,
+          player.height,
+        );
         ctx.restore();
 
         ctx.fillStyle = player.color;
         ctx.font = "bold 14px Arial";
         ctx.textAlign = "center";
-        ctx.fillText(`P${player.id}`, player.x + player.width / 2, player.y - 10);
+        ctx.fillText(
+          `P${player.id}`,
+          player.x + player.width / 2,
+          player.y - 10,
+        );
       }
     });
 
@@ -748,12 +906,16 @@ const World1 = () => {
     ctx.fillStyle = "#D94A4A";
     ctx.fillText("P2: Arrow Keys", 120, canvasSize.height - 32);
     ctx.fillStyle = "#fff";
-    ctx.fillText("| Stack on each other like Pico Park!", 240, canvasSize.height - 32);
+    ctx.fillText(
+      "| Stack on each other like Pico Park!",
+      240,
+      canvasSize.height - 32,
+    );
 
     if (gameState === "dead") {
       ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
       ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
-      
+
       if (deathImage.current && deathImage.current.complete) {
         const imgSize = 150;
         ctx.drawImage(
@@ -761,17 +923,25 @@ const World1 = () => {
           canvasSize.width / 2 - imgSize / 2,
           canvasSize.height / 2 - imgSize / 2 - 30,
           imgSize,
-          imgSize
+          imgSize,
         );
       }
-      
+
       ctx.fillStyle = "#ff4444";
       ctx.font = "bold 48px Arial";
       ctx.textAlign = "center";
-      ctx.fillText("YOU DIED! Maybe skill issue?", canvasSize.width / 2, canvasSize.height / 2 + 100);
+      ctx.fillText(
+        "YOU DIED! Maybe skill issue?",
+        canvasSize.width / 2,
+        canvasSize.height / 2 + 100,
+      );
       ctx.font = "24px Arial";
       ctx.fillStyle = "#ffffff";
-      ctx.fillText("Respawning...", canvasSize.width / 2, canvasSize.height / 2 + 140);
+      ctx.fillText(
+        "Respawning...",
+        canvasSize.width / 2,
+        canvasSize.height / 2 + 140,
+      );
       ctx.textAlign = "left";
     }
   }, [hasKey, gameState, canvasSize, handleDeath, playersAtDoor]);
@@ -779,8 +949,10 @@ const World1 = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       keysPressed.current.add(e.key.toLowerCase());
-      
-      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)) {
+
+      if (
+        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)
+      ) {
         e.preventDefault();
       }
     };
@@ -800,7 +972,7 @@ const World1 = () => {
 
   useEffect(() => {
     if (!imagesLoaded) return;
-    
+
     const interval = setInterval(gameLoop, 1000 / 60);
     return () => clearInterval(interval);
   }, [gameLoop, imagesLoaded]);
@@ -815,7 +987,7 @@ const World1 = () => {
 
   if (!imagesLoaded) {
     return (
-      <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-b from-blue-400 to-blue-200">
+      <div className="w-screen h-screen flex items-center justify-center bg-linear-to-b from-blue-400 to-blue-200">
         <div className="text-center">
           <div className="text-4xl font-bold text-white mb-4">Loading...</div>
           <div className="w-48 h-2 bg-white/30 rounded-full overflow-hidden">
@@ -827,18 +999,25 @@ const World1 = () => {
   }
 
   return (
-    <div ref={containerRef} className="w-screen h-screen overflow-hidden bg-game-sky-top">
+    <div
+      ref={containerRef}
+      className="w-screen h-screen overflow-hidden bg-game-sky-top"
+    >
       <canvas
         ref={canvasRef}
         width={canvasSize.width}
         height={canvasSize.height}
         className="block"
       />
-      
+
       {gameState === "won" && (
         <div className="fixed inset-0 flex flex-col items-center justify-center bg-game-overlay/70">
-          <h2 className="text-6xl font-bold text-game-gold mb-6">🎉 You Both Won!</h2>
-          <p className="text-primary-foreground text-2xl mb-8">Teamwork makes the dream work!</p>
+          <h2 className="text-6xl font-bold text-game-gold mb-6">
+            🎉 You Both Won!
+          </h2>
+          <p className="text-primary-foreground text-2xl mb-8">
+            Teamwork makes the dream work!
+          </p>
           <button
             onClick={resetGame}
             className="px-10 py-5 bg-game-success hover:opacity-90 text-primary-foreground font-bold text-2xl rounded-xl transition-all hover:scale-105 shadow-lg"

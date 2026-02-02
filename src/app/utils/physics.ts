@@ -27,7 +27,12 @@ export const TIMING = {
 /**
  * Player colors for different player IDs
  */
-export const PLAYER_COLORS = ["#4A90D9", "#D94A4A", "#4AD94A", "#D9D94A"] as const;
+export const PLAYER_COLORS = [
+  "#4A90D9",
+  "#D94A4A",
+  "#4AD94A",
+  "#D9D94A",
+] as const;
 
 /**
  * Max players allowed in a room
@@ -70,9 +75,7 @@ export const GAME_OBJECTS_WORLD1 = {
   },
 
   // Danger buttons
-  dangerButtons: [
-    { x: 520, y: 400, width: 30, height: 20 },
-  ],
+  dangerButtons: [{ x: 520, y: 400, width: 30, height: 20 }],
 } as const;
 
 /**
@@ -80,7 +83,7 @@ export const GAME_OBJECTS_WORLD1 = {
  */
 export const checkCollision = (
   rect1: { x: number; y: number; width: number; height: number },
-  rect2: { x: number; y: number; width: number; height: number }
+  rect2: { x: number; y: number; width: number; height: number },
 ): boolean => {
   return (
     rect1.x < rect2.x + rect2.width &&
@@ -95,7 +98,7 @@ export const checkCollision = (
  */
 export const isOnPlatform = (
   player: { x: number; y: number; width: number; height: number; vy: number },
-  platform: { x: number; y: number; width: number; height: number }
+  platform: { x: number; y: number; width: number; height: number },
 ): boolean => {
   return (
     player.vy >= 0 &&
@@ -111,7 +114,7 @@ export const isOnPlatform = (
  */
 export const applyPlatformCollision = (
   player: { y: number; height: number; vy: number; onGround: boolean },
-  platformY: number
+  platformY: number,
 ): void => {
   player.y = platformY - player.height;
   player.vy = 0;
@@ -123,7 +126,7 @@ export const applyPlatformCollision = (
  */
 export const checkDangerButtonCollision = (
   player: { x: number; y: number; width: number; height: number },
-  buttons: Array<{ x: number; y: number; width: number; height: number }>
+  buttons: Array<{ x: number; y: number; width: number; height: number }>,
 ): boolean => {
   return buttons.some((button) => checkCollision(player, button));
 };
@@ -133,7 +136,7 @@ export const checkDangerButtonCollision = (
  */
 export const getSpawnPosition = (playerId: number, groundY: number) => ({
   x: 50 + playerId * 80,
-  y: groundY - PLAYER_DIMENSIONS.HEIGHT - 10,
+  y: groundY - PLAYER_DIMENSIONS.HEIGHT,
 });
 
 /**
@@ -155,7 +158,7 @@ export const lerp = (start: number, end: number, amount: number): number => {
  */
 export const pointInRect = (
   point: { x: number; y: number },
-  rect: { x: number; y: number; width: number; height: number }
+  rect: { x: number; y: number; width: number; height: number },
 ): boolean => {
   return (
     point.x >= rect.x &&
