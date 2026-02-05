@@ -4,30 +4,26 @@ import { useNavigate } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 
 // Import images
-import player1IdleImg from "@/assets/player1-idle.png";
-import player1RightImg from "@/assets/player1-right.png";
-import player1LeftImg from "@/assets/player1-left.png";
-import player2IdleImg from "@/assets/player2-idle.png";
-import player2RightImg from "@/assets/player2-right.png";
-import player2LeftImg from "@/assets/player2-left.png";
-import player3IdleImg from "@/assets/player3-idle.png";
-import player3RightImg from "@/assets/player3-right.png";
-import player3LeftImg from "@/assets/player3-left.png";
-import player4IdleImg from "@/assets/player4-idle.png";
-import player4RightImg from "@/assets/player4-right.png";
-import player4LeftImg from "@/assets/player4-left.png";
-import keyImg from "@/assets/key.png";
-import doorImg from "@/assets/door.png";
-import deathImg from "@/assets/death.png";
-import dangerButtonImg from "@/assets/danger-button.png";
+import player1IdleImg from "@/app/assets/Finn.png";
+import player1RightImg from "@/app/assets/Finn-right.png";
+import player1LeftImg from "@/app/assets/Finn-left.png";
+import player2IdleImg from "@/app/assets/Iceking.png";
+import player2RightImg from "@/app/assets/Iceking-right.png";
+import player2LeftImg from "@/app/assets/Ice-king-left.png";
+import player3IdleImg from "@/app/assets/Jakeidle.png";
+import player3RightImg from "@/app/assets/Jake-right.png";
+import player3LeftImg from "@/app/assets/Jake-left.png";
+import player4IdleImg from "@/app/assets/BMOidle.png";
+import player4RightImg from "@/app/assets/BMO-right.png";
+import player4LeftImg from "@/app/assets/BMO-left.png";
+import keyImg from "@/app/assets/Keys.png";
+import doorImg from "@/app/assets/Door.png";
+import deathImg from "@/app/assets/Death.png";
+import dangerButtonImg from "@/app/assets/Button.png";
 
 // Import utilities
 import { updateCamera, Camera } from "@/app/utils/camera";
-import {
-  createPlatforms,
-  createDangerButtons,
-  GAME_CONSTANTS,
-} from "@/app/utils/gameData";
+import { createPlatforms, GAME_CONSTANTS } from "@/app/utils/gameData";
 import {
   loadAllImagesWorld2 as loadAllImages,
   getPlayerSprite,
@@ -39,22 +35,20 @@ import {
 } from "@/app/utils/inputHandler";
 
 import {
-  drawBackgroundWorld2 as drawBackground,
-  drawGroundWorld2 as drawGround,
-  drawPlatforms,
-  drawDangerButtons,
   drawKey,
   drawDoor,
   drawUIWorld2 as drawUI,
   drawWaitingScreen,
   drawWinScreen,
   drawDeathScreen,
-} from "@/app/utils/rendering";
+} from "@/app/utils/SharedRendering";
 import {
-  saveProgress,
-  canAccessWorld,
-  getNextWorld,
-} from "@/app/utils/Progresstracker";
+  drawBackgroundWorld1 as drawBackground,
+  drawGroundWorld1 as drawGround,
+  drawPlatforms,
+} from "@/app/utils/World1Rendering";
+
+import { canAccessWorld, getNextWorld } from "@/app/utils/Progresstracker";
 
 interface Player {
   id: string;
@@ -103,7 +97,6 @@ const MultiPlayerWorld1 = () => {
 
   const groundY = canvasSize.height - GAME_CONSTANTS.GROUND_OFFSET;
   const platformsRef = useRef(createPlatforms(groundY));
-  const dangerButtonsRef = useRef(createDangerButtons(groundY));
 
   // ✅ NEW: Check if player can access World 2
   useEffect(() => {
@@ -168,9 +161,6 @@ const MultiPlayerWorld1 = () => {
 
       // ✅ NEW: Check if game was won and save progress
       if (state.gameStatus === "won") {
-        saveProgress(2);
-        console.log("World 2 completed! Progress saved.");
-
         // Navigate to next world after delay
         setTimeout(() => {
           const nextWorld = getNextWorld();
@@ -254,7 +244,6 @@ const MultiPlayerWorld1 = () => {
 
     const players = Object.values(gameState.players);
     const platforms = platformsRef.current;
-    const dangerButtons = dangerButtonsRef.current;
 
     // Camera follow
     if (playerId && gameState.players[playerId]) {
@@ -267,7 +256,7 @@ const MultiPlayerWorld1 = () => {
     }
 
     // Draw background
-    drawBackground(ctx, canvasSize.width, canvasSize.height, animTimer.current);
+    drawBackground(ctx, canvasSize.width, canvasSize.height);
 
     ctx.save();
     ctx.translate(-cameraRef.current.x, 0);
@@ -276,14 +265,6 @@ const MultiPlayerWorld1 = () => {
     drawGround(ctx, canvasSize.height);
     drawPlatforms(ctx, platforms);
     // Only draw danger buttons if image is loaded
-    if (gameImages.dangerButton) {
-      drawDangerButtons(
-        ctx,
-        dangerButtons,
-        animTimer.current,
-        gameImages.dangerButton,
-      );
-    }
 
     // Draw key - FIXED: Pass KeyItem object
     if (!gameState.keyCollected && gameImages.key) {

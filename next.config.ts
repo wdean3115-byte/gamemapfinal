@@ -1,10 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // config options here
+  // Move reactCompiler to the top level
+  reactCompiler: true,
+
   experimental: {
-    reactCompiler: true,
+    // Keep this empty
   },
+
   env: {
     DATABASE_URL: process.env.DATABASE_URL || "",
   },

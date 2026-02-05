@@ -1,17 +1,4 @@
 /**
- * Track and manage game progress across worlds
- */
-
-/**
- * Save completed world to localStorage
- */
-export const saveProgress = (completedWorld: number): void => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem("gameProgress", completedWorld.toString());
-  }
-};
-
-/**
  * Get current game progress
  * Returns 0 if no progress saved
  */
@@ -34,9 +21,12 @@ export const canAccessWorld = (worldNumber: number): boolean => {
 /**
  * Reset all progress
  */
-export const resetProgress = (): void => {
+export const resetProgress = (ground?: { y: number }): void => {
   if (typeof window !== "undefined") {
     localStorage.removeItem("gameProgress");
+    if (ground) {
+      ground.y = -300;
+    }
   }
 };
 
