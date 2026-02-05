@@ -55,72 +55,95 @@ export const createPlatforms = (groundY: number): Platform[] => [
 /**
  * Creates all danger buttons for the level (World 2)
  */
-export const createDangerButtons = (groundY: number): DangerButton[] => [
-  { x: 260, y: groundY + 5, width: 40, height: 35 },
-  { x: 470, y: groundY + 5, width: 40, height: 35 },
-  { x: 710, y: groundY + 5, width: 40, height: 35 },
-  { x: 990, y: groundY + 5, width: 40, height: 35 },
+export const createDangerButtonsWorld2 = (groundY: number): DangerButton[] => [
+  { x: 300, y: groundY + 5, width: 40, height: 35 },
+  { x: 530, y: groundY + 5, width: 40, height: 35 },
+  { x: 770, y: groundY + 5, width: 40, height: 35 },
+  { x: 1010, y: groundY + 5, width: 40, height: 35 },
   { x: 1250, y: groundY + 5, width: 40, height: 35 },
-  { x: 1500, y: groundY + 5, width: 40, height: 35 },
-  { x: 1700, y: groundY + 5, width: 40, height: 35 },
+  { x: 1490, y: groundY + 5, width: 40, height: 35 },
+  { x: 1830, y: groundY + 5, width: 40, height: 35 },
   { x: 2070, y: groundY + 5, width: 40, height: 35 },
-  { x: 2370, y: groundY + 5, width: 40, height: 35 },
-  { x: 2740, y: groundY + 5, width: 40, height: 35 },
-  { x: 2960, y: groundY + 5, width: 40, height: 35 },
-  { x: 3330, y: groundY + 5, width: 40, height: 35 },
-  { x: 3550, y: groundY + 5, width: 40, height: 35 },
-  { x: 3790, y: groundY + 5, width: 40, height: 35 },
-  { x: 4090, y: groundY + 5, width: 40, height: 35 },
+  { x: 2310, y: groundY + 5, width: 40, height: 35 },
+  { x: 2550, y: groundY + 5, width: 40, height: 35 },
+  { x: 2790, y: groundY + 5, width: 40, height: 35 },
+  { x: 3060, y: groundY + 5, width: 40, height: 35 },
+  { x: 3300, y: groundY + 5, width: 40, height: 35 },
+  { x: 3540, y: groundY + 5, width: 40, height: 35 },
+  { x: 3780, y: groundY + 5, width: 40, height: 35 },
+  { x: 4020, y: groundY + 5, width: 40, height: 35 },
+  { x: 4260, y: groundY + 5, width: 40, height: 35 },
+  { x: 4500, y: groundY + 5, width: 40, height: 35 },
+  { x: 4740, y: groundY + 5, width: 40, height: 35 },
+  { x: 4980, y: groundY + 5, width: 40, height: 35 },
+  { x: 5220, y: groundY + 5, width: 40, height: 35 },
+  { x: 5460, y: groundY + 5, width: 40, height: 35 },
+  { x: 5730, y: groundY + 5, width: 40, height: 35 },
+  { x: 5970, y: groundY + 5, width: 40, height: 35 },
+  { x: 6210, y: groundY + 5, width: 40, height: 35 },
+  { x: 6450, y: groundY + 5, width: 40, height: 35 },
+  { x: 6690, y: groundY + 5, width: 40, height: 35 },
+  { x: 6930, y: groundY + 5, width: 40, height: 35 },
+  { x: 7170, y: groundY + 5, width: 40, height: 35 },
+  { x: 7410, y: groundY + 5, width: 40, height: 35 },
+  { x: 7890, y: groundY + 5, width: 40, height: 35 },
+];
+
+/**
+ * Creates all platforms for the level (World 2)
+ */
+export const createPlatformsWorld2 = (groundY: number): Platform[] => [
+  { x: 0, y: groundY + 40, width: 8200, height: 20 },
 ];
 
 /**
  * Creates all platforms for World 3
  */
 export const createPlatformsWorld3 = (groundY: number): Platform[] => [
-  { x: 0, y: groundY + 40, width: 400, height: 20 },
-  { x: 550, y: groundY + 40, width: 100, height: 20 },
-  { x: 750, y: groundY + 10, width: 100, height: 20 },
-  { x: 950, y: groundY + 40, width: 100, height: 20 },
-  { x: 1150, y: groundY - 10, width: 120, height: 20 },
-  { x: 1380, y: groundY + 40, width: 150, height: 20 },
-  { x: 1650, y: groundY - 90, width: 120, height: 20 },
-  { x: 1880, y: groundY - 40, width: 100, height: 20 },
-  { x: 2090, y: groundY + 10, width: 100, height: 20 },
-  { x: 2300, y: groundY + 40, width: 150, height: 20 },
-  { x: 2570, y: groundY + 40, width: 200, height: 20 },
-  { x: 2920, y: groundY - 160, width: 150, height: 20 },
-  { x: 3180, y: groundY - 110, width: 100, height: 20 },
-  { x: 3390, y: groundY - 40, width: 100, height: 20 },
-  { x: 3600, y: groundY + 40, width: 150, height: 20 },
-  { x: 3880, y: groundY, width: 80, height: 20 },
-  { x: 4070, y: groundY + 40, width: 80, height: 20 },
-  { x: 4260, y: groundY, width: 80, height: 20 },
-  { x: 4450, y: groundY + 40, width: 80, height: 20 },
-  { x: 4640, y: groundY, width: 80, height: 20 },
-  { x: 4830, y: groundY + 40, width: 150, height: 20 },
-  { x: 5100, y: groundY + 40, width: 250, height: 20 },
-  { x: 5500, y: groundY - 240, width: 150, height: 20 },
-  { x: 5760, y: groundY - 160, width: 100, height: 20 },
-  { x: 5970, y: groundY - 90, width: 100, height: 20 },
-  { x: 6180, y: groundY - 20, width: 100, height: 20 },
-  { x: 6390, y: groundY + 40, width: 150, height: 20 },
-  { x: 6670, y: groundY + 10, width: 80, height: 20 },
-  { x: 6860, y: groundY + 40, width: 80, height: 20 },
-  { x: 7050, y: groundY + 10, width: 80, height: 20 },
-  { x: 7240, y: groundY + 40, width: 80, height: 20 },
-  { x: 7430, y: groundY + 40, width: 300, height: 20 },
+  { x: 0, y: groundY, width: 400, height: 20 },
+  { x: 480, y: groundY, width: 100, height: 20 },
+  { x: 650, y: groundY, width: 100, height: 20 },
+  { x: 820, y: groundY, width: 100, height: 20 },
+  { x: 990, y: groundY, width: 120, height: 20 },
+  { x: 1180, y: groundY, width: 150, height: 20 },
+  { x: 1400, y: groundY, width: 120, height: 20 },
+  { x: 1590, y: groundY, width: 100, height: 20 },
+  { x: 1760, y: groundY, width: 100, height: 20 },
+  { x: 1930, y: groundY, width: 150, height: 20 },
+  { x: 2150, y: groundY, width: 200, height: 20 },
+  { x: 2420, y: groundY, width: 150, height: 20 },
+  { x: 2640, y: groundY, width: 100, height: 20 },
+  { x: 2810, y: groundY, width: 100, height: 20 },
+  { x: 2980, y: groundY, width: 150, height: 20 },
+  { x: 3200, y: groundY, width: 80, height: 20 },
+  { x: 3350, y: groundY, width: 80, height: 20 },
+  { x: 3500, y: groundY, width: 80, height: 20 },
+  { x: 3650, y: groundY, width: 80, height: 20 },
+  { x: 3800, y: groundY, width: 80, height: 60 },
+  { x: 3950, y: groundY, width: 150, height: 60 },
+  { x: 4170, y: groundY, width: 250, height: 60 },
+  { x: 4250, y: groundY, width: 150, height: 60 },
+  { x: 4720, y: groundY, width: 100, height: 60 },
+  { x: 4890, y: groundY, width: 100, height: 60 },
+  { x: 5060, y: groundY, width: 100, height: 60 },
+  { x: 5230, y: groundY, width: 150, height: 60 },
+  { x: 5450, y: groundY, width: 80, height: 60 },
+  { x: 5600, y: groundY, width: 80, height: 60 },
+  { x: 5750, y: groundY, width: 80, height: 60 },
+  { x: 5900, y: groundY, width: 80, height: 60 },
+  { x: 6050, y: groundY, width: 300, height: 60 },
 ];
 
 /**
  * Creates all danger buttons for World 3
  */
 export const createDangerButtonsWorld3 = (groundY: number): DangerButton[] => [
-  { x: 540, y: groundY + 5, width: 35, height: 35 },
-  { x: 2980, y: groundY + 5, width: 35, height: 35 },
-  { x: 3240, y: groundY + 5, width: 35, height: 35 },
-  { x: 3990, y: groundY + 5, width: 35, height: 35 },
-  { x: 4970, y: groundY + 5, width: 35, height: 35 },
-  { x: 5210, y: groundY + 5, width: 35, height: 35 },
+  { x: 510, y: groundY - 35, width: 30, height: 30 },
+  { x: 3220, y: groundY - 75, width: 30, height: 30 },
+  { x: 3520, y: groundY - 75, width: 30, height: 30 },
+  { x: 4250, y: groundY - 35, width: 30, height: 30 },
+  { x: 5470, y: groundY - 65, width: 30, height: 30 },
+  { x: 5770, y: groundY - 65, width: 30, height: 30 },
 ];
 
 /**
@@ -130,8 +153,8 @@ export const GAME_CONSTANTS = {
   KEY_POSITION: { x: 4800, y: -140 },
   DOOR_POSITION: { x: 5660, y: -35 },
   DOOR_SIZE: { width: 55, height: 75 },
-  KEY_SIZE: { width: 40, height: 40 },
-  GROUND_OFFSET: 50, // Height from bottom of canvas
+  KEY_SIZE: { width: 30, height: 40 },
+  GROUND_OFFSET: 30, // Height from bottom of canvas
 
   // World 3 specific constants
   KEY_POSITION_WORLD3: { x: 5540, y: -280 },

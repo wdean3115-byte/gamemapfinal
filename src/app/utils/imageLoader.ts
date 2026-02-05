@@ -3,7 +3,6 @@ interface PlayerImages {
   right: HTMLImageElement | null;
   left: HTMLImageElement | null;
 }
-
 export interface GameImages {
   player1: PlayerImages;
   player2: PlayerImages;
@@ -15,17 +14,11 @@ export interface GameImages {
   dangerButton?: HTMLImageElement | null; // Optional for World 2
   box?: HTMLImageElement | null; // Optional for World 3
 }
-
-/**
- * Helper function to get image source from string or object
- */
+//  * Helper function to get image source from string or object
 const getImageSrc = (img: string | { src: string }): string => {
   return typeof img === "string" ? img : img.src;
 };
-
-/**
- * Load a single image and return a promise
- */
+//  * Load a single image and return a promise
 const loadImage = (src: string): Promise<HTMLImageElement> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -37,10 +30,7 @@ const loadImage = (src: string): Promise<HTMLImageElement> => {
     img.src = src;
   });
 };
-
-/**
- * Load all game images asynchronously (World 1 - without danger button)
- */
+//  * Load all game images asynchronously (World 1 - without danger button)
 export const loadAllImagesWorld1 = async (
   player1IdleImg: string | { src: string },
   player1RightImg: string | { src: string },
@@ -56,15 +46,25 @@ export const loadAllImagesWorld1 = async (
   player4LeftImg: string | { src: string },
   keyImg: string | { src: string },
   doorImg: string | { src: string },
-  deathImg: string | { src: string }
+  deathImg: string | { src: string },
 ): Promise<GameImages> => {
   try {
     const [
-      p1Idle, p1Right, p1Left,
-      p2Idle, p2Right, p2Left,
-      p3Idle, p3Right, p3Left,
-      p4Idle, p4Right, p4Left,
-      key, door, death,
+      p1Idle,
+      p1Right,
+      p1Left,
+      p2Idle,
+      p2Right,
+      p2Left,
+      p3Idle,
+      p3Right,
+      p3Left,
+      p4Idle,
+      p4Right,
+      p4Left,
+      key,
+      door,
+      death,
     ] = await Promise.all([
       loadImage(getImageSrc(player1IdleImg)),
       loadImage(getImageSrc(player1RightImg)),
@@ -97,10 +97,7 @@ export const loadAllImagesWorld1 = async (
     throw error;
   }
 };
-
-/**
- * Load all game images asynchronously (World 2 - with danger button)
- */
+//  * Load all game images asynchronously (World 2 - with danger button)
 export const loadAllImagesWorld2 = async (
   player1IdleImg: string | { src: string },
   player1RightImg: string | { src: string },
@@ -117,15 +114,26 @@ export const loadAllImagesWorld2 = async (
   keyImg: string | { src: string },
   doorImg: string | { src: string },
   deathImg: string | { src: string },
-  dangerButtonImg: string | { src: string }
+  dangerButtonImg: string | { src: string },
 ): Promise<GameImages> => {
   try {
     const [
-      p1Idle, p1Right, p1Left,
-      p2Idle, p2Right, p2Left,
-      p3Idle, p3Right, p3Left,
-      p4Idle, p4Right, p4Left,
-      key, door, death, dangerButton
+      p1Idle,
+      p1Right,
+      p1Left,
+      p2Idle,
+      p2Right,
+      p2Left,
+      p3Idle,
+      p3Right,
+      p3Left,
+      p4Idle,
+      p4Right,
+      p4Left,
+      key,
+      door,
+      death,
+      dangerButton,
     ] = await Promise.all([
       loadImage(getImageSrc(player1IdleImg)),
       loadImage(getImageSrc(player1RightImg)),
@@ -160,10 +168,7 @@ export const loadAllImagesWorld2 = async (
     throw error;
   }
 };
-
-/**
- * Load all game images asynchronously (World 3 - with danger button and box)
- */
+//  * Load all game images asynchronously (World 3 - with danger button and box)
 export const loadAllImagesWorld3 = async (
   player1IdleImg: string | { src: string },
   player1RightImg: string | { src: string },
@@ -181,15 +186,27 @@ export const loadAllImagesWorld3 = async (
   doorImg: string | { src: string },
   deathImg: string | { src: string },
   dangerButtonImg: string | { src: string },
-  boxImg: string | { src: string }
+  boxImg: string | { src: string },
 ): Promise<GameImages> => {
   try {
     const [
-      p1Idle, p1Right, p1Left,
-      p2Idle, p2Right, p2Left,
-      p3Idle, p3Right, p3Left,
-      p4Idle, p4Right, p4Left,
-      key, door, death, dangerButton, box
+      p1Idle,
+      p1Right,
+      p1Left,
+      p2Idle,
+      p2Right,
+      p2Left,
+      p3Idle,
+      p3Right,
+      p3Left,
+      p4Idle,
+      p4Right,
+      p4Left,
+      key,
+      door,
+      death,
+      dangerButton,
+      box,
     ] = await Promise.all([
       loadImage(getImageSrc(player1IdleImg)),
       loadImage(getImageSrc(player1RightImg)),
@@ -226,15 +243,12 @@ export const loadAllImagesWorld3 = async (
     throw error;
   }
 };
-
-/**
- * Get the appropriate sprite for a player based on their state
- */
+//  * Get the appropriate sprite for a player based on their state
 export const getPlayerSprite = (
   images: GameImages,
   playerId: number,
   animFrame: number,
-  facingRight: boolean
+  facingRight: boolean,
 ): HTMLImageElement | null => {
   let playerImages: PlayerImages | null = null;
   switch (playerId) {

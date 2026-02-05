@@ -3,7 +3,7 @@
  */
 export const PHYSICS = {
   GRAVITY: 0.6,
-  JUMP_FORCE: -10,
+  JUMP_FORCE: -9,
   MOVE_SPEED: 4,
 } as const;
 
@@ -11,7 +11,7 @@ export const PHYSICS = {
  * Player dimensions
  */
 export const PLAYER_DIMENSIONS = {
-  WIDTH: 45,
+  WIDTH: 35,
   HEIGHT: 55,
 } as const;
 
@@ -60,8 +60,8 @@ export const GAME_OBJECTS_WORLD1 = {
   KEY: {
     x: 560,
     y: 240,
-    width: 24,
-    height: 24,
+    width: 48,
+    height: 60,
     yOffset: 0,
   },
 

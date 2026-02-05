@@ -1,55 +1,70 @@
 "use client";
+
+// React imports
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+
+// Socket.IO
 import { io, Socket } from "socket.io-client";
 
-// Import images
-import player1IdleImg from "@/assets/player1-idle.png";
-import player1RightImg from "@/assets/player1-right.png";
-import player1LeftImg from "@/assets/player1-left.png";
-import player2IdleImg from "@/assets/player2-idle.png";
-import player2RightImg from "@/assets/player2-right.png";
-import player2LeftImg from "@/assets/player2-left.png";
-import player3IdleImg from "@/assets/player3-idle.png";
-import player3RightImg from "@/assets/player3-right.png";
-import player3LeftImg from "@/assets/player3-left.png";
-import player4IdleImg from "@/assets/player4-idle.png";
-import player4RightImg from "@/assets/player4-right.png";
-import player4LeftImg from "@/assets/player4-left.png";
-import keyImg from "@/assets/key.png";
-import doorImg from "@/assets/door.png";
-import deathImg from "@/assets/death.png";
-import dangerButtonImg from "@/assets/danger-button.png";
+// Player images
+import player1IdleImg from "@/app/assets/Finn.png";
+import player1RightImg from "@/app/assets/Finn-right.png";
+import player1LeftImg from "@/app/assets/Finn-left.png";
+import player2IdleImg from "@/app/assets/Iceking.png";
+import player2RightImg from "@/app/assets/Iceking-right.png";
+import player2LeftImg from "@/app/assets/Ice-king-left.png";
+import player3IdleImg from "@/app/assets/Jakeidle.png";
+import player3RightImg from "@/app/assets/Jake-right.png";
+import player3LeftImg from "@/app/assets/Jake-left.png";
+import player4IdleImg from "@/app/assets/BMOidle.png";
+import player4RightImg from "@/app/assets/BMO-right.png";
+import player4LeftImg from "@/app/assets/BMO-left.png";
+import keyImg from "@/app/assets/Keys.png";
+import doorImg from "@/app/assets/Door.png";
+import deathImg from "@/app/assets/Death.png";
+import dangerButtonImg from "@/app/assets/Button.png";
 
-// Import utilities
+// Camera utilities
 import { updateCamera, Camera } from "@/app/utils/camera";
+
+// Game data
 import {
-  createPlatforms,
-  createDangerButtons,
+  createPlatformsWorld2,
+  createDangerButtonsWorld2,
   GAME_CONSTANTS,
 } from "@/app/utils/gameData";
+
+// Image loader
 import {
   loadAllImagesWorld2 as loadAllImages,
   getPlayerSprite,
   GameImages,
 } from "@/app/utils/imageLoader";
+
+// Input handler
 import {
   createKeyboardHandlers,
   getPlayerInput,
 } from "@/app/utils/inputHandler";
 
+// Shared rendering
 import {
-  drawBackgroundWorld2 as drawBackground,
-  drawGroundWorld2 as drawGround,
-  drawPlatforms,
-  drawDangerButtons,
   drawKey,
   drawDoor,
   drawUIWorld2 as drawUI,
   drawWaitingScreen,
   drawWinScreen,
   drawDeathScreen,
-} from "@/app/utils/rendering";
+} from "@/app/utils/SharedRendering";
+
+// World 2 specific rendering
+import {
+  drawBackgroundWorld2 as drawBackground,
+  drawGroundWorld2 as drawGround,
+  drawPlatforms,
+  drawDangerButtons,
+} from "@/app/utils/World2Rendering";
 
 interface Player {
   id: string;
@@ -97,8 +112,8 @@ const MultiPlayerWorld2 = () => {
   const cameraRef = useRef<Camera>({ x: 0, y: 0 });
 
   const groundY = canvasSize.height - GAME_CONSTANTS.GROUND_OFFSET;
-  const platformsRef = useRef(createPlatforms(groundY));
-  const dangerButtonsRef = useRef(createDangerButtons(groundY));
+  const platformsRef = useRef(createPlatformsWorld2(groundY));
+  const dangerButtonsRef = useRef(createDangerButtonsWorld2(groundY));
 
   // Load images
   useEffect(() => {

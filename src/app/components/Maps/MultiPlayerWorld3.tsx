@@ -3,24 +3,23 @@ import { useNavigate } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 
 // Import images
-import player1IdleImg from "@/assets/player1-idle.png";
-import player1RightImg from "@/assets/player1-right.png";
-import player1LeftImg from "@/assets/player1-left.png";
-import player2IdleImg from "@/assets/player2-idle.png";
-import player2RightImg from "@/assets/player2-right.png";
-import player2LeftImg from "@/assets/player2-left.png";
-import player3IdleImg from "@/assets/player3-idle.png";
-import player3RightImg from "@/assets/player3-right.png";
-import player3LeftImg from "@/assets/player3-left.png";
-import player4IdleImg from "@/assets/player4-idle.png";
-import player4RightImg from "@/assets/player4-right.png";
-import player4LeftImg from "@/assets/player4-left.png";
-import keyImg from "@/assets/key.png";
-import doorImg from "@/assets/door.png";
-import deathImg from "@/assets/death.png";
-import dangerButtonImg from "@/assets/danger-button.png";
-import boxImg from "@/assets/box.png";
-
+import player1IdleImg from "@/app/assets/Finn.png";
+import player1RightImg from "@/app/assets/Finn-right.png";
+import player1LeftImg from "@/app/assets/Finn-left.png";
+import player2IdleImg from "@/app/assets/Iceking.png";
+import player2RightImg from "@/app/assets/Iceking-right.png";
+import player2LeftImg from "@/app/assets/Ice-king-left.png";
+import player3IdleImg from "@/app/assets/Jakeidle.png";
+import player3RightImg from "@/app/assets/Jake-right.png";
+import player3LeftImg from "@/app/assets/Jake-left.png";
+import player4IdleImg from "@/app/assets/BMOidle.png";
+import player4RightImg from "@/app/assets/BMO-right.png";
+import player4LeftImg from "@/app/assets/BMO-left.png";
+import keyImg from "@/app/assets/Keys.png";
+import doorImg from "@/app/assets/Door.png";
+import deathImg from "@/app/assets/Death.png";
+import dangerButtonImg from "@/app/assets/Button.png";
+import boxImg from "@/app/assets/box.png";
 // Import utilities
 import { updateCamera, Camera } from "@/app/utils/camera";
 import {
@@ -38,18 +37,24 @@ import {
   getPlayerInput,
 } from "@/app/utils/inputHandler";
 import {
-  drawBackgroundWorld3 as drawBackground,
-  drawPlatforms,
-  drawDangerButtons,
-  drawBoxes,
   drawKey,
   drawDoor,
-  drawUIWorld3 as drawUI,
   drawWaitingScreen,
   drawWinScreen,
   drawDeathScreen,
-} from "@/app/utils/rendering";
-import { saveProgress, canAccessWorld } from "@/app/utils/Progresstracker";
+} from "@/app/utils/SharedRendering";
+import {
+  drawUIWorld3 as drawUI,
+  drawBackgroundWorld3 as drawBackground,
+  drawBoxes,
+} from "@/app/utils/World3Rendering";
+
+import {
+  drawPlatforms,
+  drawDangerButtons,
+} from "@/app/utils/World3RenderingPlatformButtton";
+
+import { canAccessWorld } from "@/app/utils/Progresstracker";
 
 // Local rendering function
 const drawGroundWorld3 = (ctx: CanvasRenderingContext2D, height: number) => {
@@ -123,7 +128,7 @@ const MultiPlayerWorld3 = () => {
   useEffect(() => {
     if (!canAccessWorld(3)) {
       alert("Та эхлээд World 2-ыг дуусгана уу!");
-      navigate("/maps/world2");
+      navigate("/maps/MultiPlayerWorld2");
     }
   }, [navigate]);
 
@@ -183,9 +188,6 @@ const MultiPlayerWorld3 = () => {
 
       // ✅ NEW: Check if game was won and save progress
       if (state.gameStatus === "won") {
-        saveProgress(3);
-        console.log("World 3 completed! All worlds finished! 🎉");
-
         // Navigate to completion screen or menu after delay
         setTimeout(() => {
           navigate("/"); // Go back to main menu after completing final world
@@ -311,7 +313,7 @@ const MultiPlayerWorld3 = () => {
       const keyItem = {
         x: keyX,
         y: keyY,
-        width: 40,
+        width: 30,
         height: 40,
         collected: false,
       };
